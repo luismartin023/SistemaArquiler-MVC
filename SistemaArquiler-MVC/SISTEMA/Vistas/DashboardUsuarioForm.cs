@@ -62,9 +62,10 @@ namespace SistemaGestionResidencial.Vistas
 
             // Form
             this.Text = "Mi Perfil";
-            this.Size = new Size(900, 600);
+            this.Size = new Size(920, 720);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = Color.FromArgb(236, 240, 241);
+            this.BackColor = Color.FromArgb(248, 249, 250);
+            this.AutoScroll = true;
 
             // lblTitulo
             lblTitulo.Text = "👤 Mi Perfil";

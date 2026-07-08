@@ -321,11 +321,11 @@ namespace SistemaGestionResidencial.Vistas
 
         private void MostrarFormEnPanel(Form form)
         {
-            // Cerrar el formulario actual si existe
+            // Ocultar el formulario actual si existe (no dispose para evitar error)
             if (_currentForm != null)
             {
-                _currentForm.Close();
-                _currentForm.Dispose();
+                _currentForm.Hide();
+                panelContent.Controls.Remove(_currentForm);
             }
 
             // Configurar el nuevo formulario

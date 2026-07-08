@@ -15,22 +15,29 @@ namespace SistemaGestionResidencial.Vistas
         private TextBox txtMonto;
         private ComboBox cmbMetodoPago;
         private TextBox txtReferencia;
+        private TextBox txtBusqueda;
+        private TextBox txtNumeroRecibo;
+        private ComboBox cmbEstado;
         private Button btnAgregar;
         private Button btnEditar;
         private Button btnEliminar;
         private Button btnLimpiar;
+        private Button btnBuscarPanel;
         private Label lblTitulo;
         private Label lblContrato;
         private Label lblFechaPago;
         private Label lblMonto;
         private Label lblMetodoPago;
         private Label lblReferencia;
+        private Label lblNumeroRecibo;
+        private Label lblEstado;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
 
         private readonly IPagoRepository _pagoRepository;
         private readonly IContratoRepository _contratoRepository;
@@ -62,32 +69,82 @@ namespace SistemaGestionResidencial.Vistas
             lblMonto = new Label();
             lblMetodoPago = new Label();
             lblReferencia = new Label();
+            lblNumeroRecibo = new Label();
+            lblEstado = new Label();
+            Panel panelFormulario = new Panel();
+            Label lblFormulario = new Label();
+            Panel panelBusqueda = new Panel();
+            Label lblBusqueda = new Label();
+            TextBox txtBusqueda = new TextBox();
+            Button btnBuscarPanel = new Button();
+            TextBox txtNumeroRecibo = new TextBox();
+            ComboBox cmbEstado = new ComboBox();
             dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn4 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn5 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
-            Panel panelFormulario = new Panel();
-            Label lblFormulario = new Label();
+            dataGridViewTextBoxColumn7 = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dgvPagos).BeginInit();
             SuspendLayout();
 
+            // Form
+            this.BackColor = Color.FromArgb(248, 249, 250);
+            this.AutoScroll = true;
+
             // lblTitulo
             lblTitulo.Text = "💰 Gestión de Pagos";
-            lblTitulo.Font = new Font("Segoe UI", 18, FontStyle.Bold);
+            lblTitulo.Font = new Font("Segoe UI", 20, FontStyle.Bold);
             lblTitulo.ForeColor = Color.FromArgb(45, 52, 54);
             lblTitulo.Location = new Point(20, 20);
-            lblTitulo.Size = new Size(350, 35);
+            lblTitulo.Size = new Size(400, 40);
             lblTitulo.TabIndex = 0;
 
+            // panelBusqueda
+            panelBusqueda.Location = new Point(20, 70);
+            panelBusqueda.Size = new Size(880, 50);
+            panelBusqueda.BackColor = Color.White;
+            panelBusqueda.BorderStyle = BorderStyle.FixedSingle;
+
+            // lblBusqueda
+            lblBusqueda.Text = "🔍 Buscar:";
+            lblBusqueda.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            lblBusqueda.ForeColor = Color.FromArgb(45, 52, 54);
+            lblBusqueda.Location = new Point(15, 15);
+            lblBusqueda.Size = new Size(70, 25);
+            panelBusqueda.Controls.Add(lblBusqueda);
+
+            // txtBusqueda
+            txtBusqueda.Location = new Point(90, 12);
+            txtBusqueda.Name = "txtBusqueda";
+            txtBusqueda.Size = new Size(400, 25);
+            txtBusqueda.Font = new Font("Segoe UI", 9);
+            txtBusqueda.BorderStyle = BorderStyle.FixedSingle;
+            txtBusqueda.BackColor = Color.White;
+            txtBusqueda.PlaceholderText = "Buscar por contrato, referencia...";
+            panelBusqueda.Controls.Add(txtBusqueda);
+
+            // btnBuscarPanel
+            btnBuscarPanel.Text = "🔎 Buscar";
+            btnBuscarPanel.Location = new Point(500, 10);
+            btnBuscarPanel.Name = "btnBuscarPanel";
+            btnBuscarPanel.Size = new Size(100, 30);
+            btnBuscarPanel.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+            btnBuscarPanel.BackColor = Color.FromArgb(52, 152, 219);
+            btnBuscarPanel.ForeColor = Color.White;
+            btnBuscarPanel.FlatStyle = FlatStyle.Flat;
+            btnBuscarPanel.FlatAppearance.BorderSize = 0;
+            btnBuscarPanel.Cursor = Cursors.Hand;
+            panelBusqueda.Controls.Add(btnBuscarPanel);
+
             // dgvPagos
-            dgvPagos.ColumnHeadersHeight = 35;
-            dgvPagos.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, dataGridViewTextBoxColumn2, dataGridViewTextBoxColumn3, dataGridViewTextBoxColumn4, dataGridViewTextBoxColumn5, dataGridViewTextBoxColumn6 });
-            dgvPagos.Location = new Point(20, 70);
+            dgvPagos.ColumnHeadersHeight = 40;
+            dgvPagos.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, dataGridViewTextBoxColumn2, dataGridViewTextBoxColumn3, dataGridViewTextBoxColumn4, dataGridViewTextBoxColumn5, dataGridViewTextBoxColumn6, dataGridViewTextBoxColumn7 });
+            dgvPagos.Location = new Point(20, 130);
             dgvPagos.Name = "dgvPagos";
             dgvPagos.RowHeadersWidth = 40;
-            dgvPagos.Size = new Size(880, 280);
+            dgvPagos.Size = new Size(880, 300);
             dgvPagos.TabIndex = 1;
             dgvPagos.BackgroundColor = Color.White;
             dgvPagos.GridColor = Color.FromArgb(236, 240, 241);
@@ -99,11 +156,12 @@ namespace SistemaGestionResidencial.Vistas
             dgvPagos.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             dgvPagos.EnableHeadersVisualStyles = false;
             dgvPagos.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(244, 246, 247);
+            dgvPagos.RowTemplate.Height = 30;
 
             // panelFormulario
-            panelFormulario.Location = new Point(20, 370);
-            panelFormulario.Size = new Size(880, 200);
-            panelFormulario.BackColor = Color.FromArgb(248, 249, 250);
+            panelFormulario.Location = new Point(20, 450);
+            panelFormulario.Size = new Size(880, 250);
+            panelFormulario.BackColor = Color.White;
             panelFormulario.BorderStyle = BorderStyle.FixedSingle;
 
             // lblFormulario
@@ -200,9 +258,45 @@ namespace SistemaGestionResidencial.Vistas
             txtReferencia.BackColor = Color.White;
             panelFormulario.Controls.Add(txtReferencia);
 
+            // lblNumeroRecibo
+            lblNumeroRecibo.Text = "N° Recibo:";
+            lblNumeroRecibo.Font = new Font("Segoe UI", 9);
+            lblNumeroRecibo.ForeColor = Color.FromArgb(127, 140, 141);
+            lblNumeroRecibo.Location = new Point(30, 110);
+            lblNumeroRecibo.Size = new Size(70, 20);
+            panelFormulario.Controls.Add(lblNumeroRecibo);
+
+            // txtNumeroRecibo
+            txtNumeroRecibo.Location = new Point(30, 135);
+            txtNumeroRecibo.Name = "txtNumeroRecibo";
+            txtNumeroRecibo.Size = new Size(150, 25);
+            txtNumeroRecibo.Font = new Font("Segoe UI", 9);
+            txtNumeroRecibo.BorderStyle = BorderStyle.FixedSingle;
+            txtNumeroRecibo.BackColor = Color.White;
+            panelFormulario.Controls.Add(txtNumeroRecibo);
+
+            // lblEstado
+            lblEstado.Text = "Estado:";
+            lblEstado.Font = new Font("Segoe UI", 9);
+            lblEstado.ForeColor = Color.FromArgb(127, 140, 141);
+            lblEstado.Location = new Point(200, 110);
+            lblEstado.Size = new Size(50, 20);
+            panelFormulario.Controls.Add(lblEstado);
+
+            // cmbEstado
+            cmbEstado.Items.AddRange(new object[] { "Pagado", "Pendiente", "Cancelado" });
+            cmbEstado.Location = new Point(200, 135);
+            cmbEstado.Name = "cmbEstado";
+            cmbEstado.Size = new Size(120, 25);
+            cmbEstado.Font = new Font("Segoe UI", 9);
+            cmbEstado.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbEstado.BackColor = Color.White;
+            cmbEstado.SelectedIndex = 0;
+            panelFormulario.Controls.Add(cmbEstado);
+
             // btnAgregar
             btnAgregar.Text = "➕ Agregar";
-            btnAgregar.Location = new Point(30, 120);
+            btnAgregar.Location = new Point(30, 175);
             btnAgregar.Name = "btnAgregar";
             btnAgregar.Size = new Size(100, 35);
             btnAgregar.Font = new Font("Segoe UI", 9, FontStyle.Bold);
@@ -217,7 +311,7 @@ namespace SistemaGestionResidencial.Vistas
 
             // btnEditar
             btnEditar.Text = "✏️ Editar";
-            btnEditar.Location = new Point(150, 120);
+            btnEditar.Location = new Point(150, 175);
             btnEditar.Name = "btnEditar";
             btnEditar.Size = new Size(100, 35);
             btnEditar.Font = new Font("Segoe UI", 9, FontStyle.Bold);
@@ -232,7 +326,7 @@ namespace SistemaGestionResidencial.Vistas
 
             // btnEliminar
             btnEliminar.Text = "🗑️ Eliminar";
-            btnEliminar.Location = new Point(270, 120);
+            btnEliminar.Location = new Point(270, 175);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(100, 35);
             btnEliminar.Font = new Font("Segoe UI", 9, FontStyle.Bold);
@@ -247,7 +341,7 @@ namespace SistemaGestionResidencial.Vistas
 
             // btnLimpiar
             btnLimpiar.Text = "🧹 Limpiar";
-            btnLimpiar.Location = new Point(390, 120);
+            btnLimpiar.Location = new Point(390, 175);
             btnLimpiar.Name = "btnLimpiar";
             btnLimpiar.Size = new Size(100, 35);
             btnLimpiar.Font = new Font("Segoe UI", 9, FontStyle.Bold);
@@ -298,15 +392,22 @@ namespace SistemaGestionResidencial.Vistas
             dataGridViewTextBoxColumn6.Width = 150;
             dataGridViewTextBoxColumn6.DefaultCellStyle.Font = new Font("Segoe UI", 9);
 
+            dataGridViewTextBoxColumn7.HeaderText = "Estado";
+            dataGridViewTextBoxColumn7.MinimumWidth = 80;
+            dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            dataGridViewTextBoxColumn7.Width = 100;
+            dataGridViewTextBoxColumn7.DefaultCellStyle.Font = new Font("Segoe UI", 9);
+
             // PagoForm
-            ClientSize = new Size(920, 590);
+            ClientSize = new Size(920, 720);
             Controls.Add(panelFormulario);
+            Controls.Add(panelBusqueda);
             Controls.Add(lblTitulo);
             Controls.Add(dgvPagos);
             Name = "PagoForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Gestión de Pagos";
-            BackColor = Color.FromArgb(236, 240, 241);
+            BackColor = Color.FromArgb(248, 249, 250);
             Font = new Font("Segoe UI", 9);
             ((System.ComponentModel.ISupportInitialize)dgvPagos).EndInit();
             ResumeLayout(false);

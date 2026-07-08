@@ -46,28 +46,29 @@ namespace SistemaGestionResidencial.Vistas
             lblPagosMesValor = new Label();
             panelMetricas = new Panel();
             panelGraficos = new Panel();
-            
+
             SuspendLayout();
-            
+
             // Form
             this.Text = "Dashboard Admin";
-            this.Size = new Size(900, 600);
+            this.Size = new Size(920, 720);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = Color.FromArgb(236, 240, 241);
-            
+            this.BackColor = Color.FromArgb(248, 249, 250);
+            this.AutoScroll = true;
+
             // lblTitulo
             lblTitulo.Text = "📊 Dashboard Administrador";
             lblTitulo.Font = new Font("Segoe UI", 20, FontStyle.Bold);
             lblTitulo.ForeColor = Color.FromArgb(45, 52, 54);
             lblTitulo.Location = new Point(30, 20);
             lblTitulo.Size = new Size(400, 40);
-            
+
             // panelMetricas
             panelMetricas.Location = new Point(30, 80);
             panelMetricas.Size = new Size(840, 150);
             panelMetricas.BackColor = Color.White;
             panelMetricas.BorderStyle = BorderStyle.FixedSingle;
-            
+
             // Metrica 1: Total Apartamentos
             lblTotalApartamentos.Text = "🏢 Total Apartamentos";
             lblTotalApartamentos.Font = new Font("Segoe UI", 10);
@@ -75,14 +76,14 @@ namespace SistemaGestionResidencial.Vistas
             lblTotalApartamentos.Location = new Point(20, 20);
             lblTotalApartamentos.Size = new Size(180, 25);
             panelMetricas.Controls.Add(lblTotalApartamentos);
-            
+
             lblTotalApartamentosValor.Text = "0";
             lblTotalApartamentosValor.Font = new Font("Segoe UI", 28, FontStyle.Bold);
             lblTotalApartamentosValor.ForeColor = Color.FromArgb(52, 152, 219);
             lblTotalApartamentosValor.Location = new Point(20, 50);
             lblTotalApartamentosValor.Size = new Size(180, 40);
             panelMetricas.Controls.Add(lblTotalApartamentosValor);
-            
+
             // Metrica 2: Apartamentos Disponibles
             lblApartamentosDisponibles.Text = "✅ Disponibles";
             lblApartamentosDisponibles.Font = new Font("Segoe UI", 10);
@@ -90,14 +91,14 @@ namespace SistemaGestionResidencial.Vistas
             lblApartamentosDisponibles.Location = new Point(220, 20);
             lblApartamentosDisponibles.Size = new Size(180, 25);
             panelMetricas.Controls.Add(lblApartamentosDisponibles);
-            
+
             lblApartamentosDisponiblesValor.Text = "0";
             lblApartamentosDisponiblesValor.Font = new Font("Segoe UI", 28, FontStyle.Bold);
             lblApartamentosDisponiblesValor.ForeColor = Color.FromArgb(46, 204, 113);
             lblApartamentosDisponiblesValor.Location = new Point(220, 50);
             lblApartamentosDisponiblesValor.Size = new Size(180, 40);
             panelMetricas.Controls.Add(lblApartamentosDisponiblesValor);
-            
+
             // Metrica 3: Contratos Activos
             lblContratosActivos.Text = "📄 Contratos Activos";
             lblContratosActivos.Font = new Font("Segoe UI", 10);
@@ -105,14 +106,14 @@ namespace SistemaGestionResidencial.Vistas
             lblContratosActivos.Location = new Point(420, 20);
             lblContratosActivos.Size = new Size(180, 25);
             panelMetricas.Controls.Add(lblContratosActivos);
-            
+
             lblContratosActivosValor.Text = "0";
             lblContratosActivosValor.Font = new Font("Segoe UI", 28, FontStyle.Bold);
             lblContratosActivosValor.ForeColor = Color.FromArgb(241, 196, 15);
             lblContratosActivosValor.Location = new Point(420, 50);
             lblContratosActivosValor.Size = new Size(180, 40);
             panelMetricas.Controls.Add(lblContratosActivosValor);
-            
+
             // Metrica 4: Pagos del Mes
             lblPagosMes.Text = "💰 Pagos del Mes";
             lblPagosMes.Font = new Font("Segoe UI", 10);
@@ -120,20 +121,20 @@ namespace SistemaGestionResidencial.Vistas
             lblPagosMes.Location = new Point(620, 20);
             lblPagosMes.Size = new Size(180, 25);
             panelMetricas.Controls.Add(lblPagosMes);
-            
+
             lblPagosMesValor.Text = "0";
             lblPagosMesValor.Font = new Font("Segoe UI", 28, FontStyle.Bold);
             lblPagosMesValor.ForeColor = Color.FromArgb(155, 89, 182);
             lblPagosMesValor.Location = new Point(620, 50);
             lblPagosMesValor.Size = new Size(180, 40);
             panelMetricas.Controls.Add(lblPagosMesValor);
-            
+
             // panelGraficos
             panelGraficos.Location = new Point(30, 250);
             panelGraficos.Size = new Size(840, 300);
             panelGraficos.BackColor = Color.White;
             panelGraficos.BorderStyle = BorderStyle.FixedSingle;
-            
+
             Label lblGraficos = new Label();
             lblGraficos.Text = "📈 Gráficos y Reportes";
             lblGraficos.Font = new Font("Segoe UI", 14, FontStyle.Bold);
@@ -141,7 +142,7 @@ namespace SistemaGestionResidencial.Vistas
             lblGraficos.Location = new Point(20, 20);
             lblGraficos.Size = new Size(200, 30);
             panelGraficos.Controls.Add(lblGraficos);
-            
+
             Label lblPlaceholder = new Label();
             lblPlaceholder.Text = "Aquí se mostrarán los gráficos de ingresos, ocupación y más...";
             lblPlaceholder.Font = new Font("Segoe UI", 12);
@@ -149,12 +150,12 @@ namespace SistemaGestionResidencial.Vistas
             lblPlaceholder.Location = new Point(20, 80);
             lblPlaceholder.Size = new Size(800, 30);
             panelGraficos.Controls.Add(lblPlaceholder);
-            
+
             // Agregar controles al form
             Controls.Add(panelGraficos);
             Controls.Add(panelMetricas);
             Controls.Add(lblTitulo);
-            
+
             ResumeLayout(false);
             PerformLayout();
         }

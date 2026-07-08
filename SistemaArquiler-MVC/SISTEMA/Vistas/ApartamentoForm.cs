@@ -18,10 +18,12 @@ namespace SistemaGestionResidencial.Vistas
         private TextBox txtPrecioAlquiler;
         private ComboBox cmbEstado;
         private TextBox txtDescripcion;
+        private TextBox txtBusqueda;
         private Button btnAgregar;
         private Button btnEditar;
         private Button btnEliminar;
         private Button btnLimpiar;
+        private Button btnBuscar;
         private Label lblTitulo;
         private Label lblNumero;
         private Label lblBloque;
@@ -75,6 +77,10 @@ namespace SistemaGestionResidencial.Vistas
             lblDescripcion = new Label();
             Panel panelFormulario = new Panel();
             Label lblFormulario = new Label();
+            Panel panelBusqueda = new Panel();
+            TextBox txtBusqueda = new TextBox();
+            Button btnBuscar = new Button();
+            Label lblBusqueda = new Label();
             dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
@@ -86,21 +92,62 @@ namespace SistemaGestionResidencial.Vistas
             ((System.ComponentModel.ISupportInitialize)dgvApartamentos).BeginInit();
             SuspendLayout();
 
+            // Form
+            this.BackColor = Color.FromArgb(248, 249, 250);
+            this.AutoScroll = true;
+
             // lblTitulo
             lblTitulo.Text = "🏢 Gestión de Apartamentos";
-            lblTitulo.Font = new Font("Segoe UI", 18, FontStyle.Bold);
+            lblTitulo.Font = new Font("Segoe UI", 20, FontStyle.Bold);
             lblTitulo.ForeColor = Color.FromArgb(45, 52, 54);
             lblTitulo.Location = new Point(20, 20);
-            lblTitulo.Size = new Size(350, 35);
+            lblTitulo.Size = new Size(400, 40);
             lblTitulo.TabIndex = 0;
 
+            // panelBusqueda
+            panelBusqueda.Location = new Point(20, 70);
+            panelBusqueda.Size = new Size(880, 50);
+            panelBusqueda.BackColor = Color.White;
+            panelBusqueda.BorderStyle = BorderStyle.FixedSingle;
+
+            // lblBusqueda
+            lblBusqueda.Text = "🔍 Buscar:";
+            lblBusqueda.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            lblBusqueda.ForeColor = Color.FromArgb(45, 52, 54);
+            lblBusqueda.Location = new Point(15, 15);
+            lblBusqueda.Size = new Size(70, 25);
+            panelBusqueda.Controls.Add(lblBusqueda);
+
+            // txtBusqueda
+            txtBusqueda.Location = new Point(90, 12);
+            txtBusqueda.Name = "txtBusqueda";
+            txtBusqueda.Size = new Size(400, 25);
+            txtBusqueda.Font = new Font("Segoe UI", 9);
+            txtBusqueda.BorderStyle = BorderStyle.FixedSingle;
+            txtBusqueda.BackColor = Color.White;
+            txtBusqueda.PlaceholderText = "Buscar por número, bloque...";
+            panelBusqueda.Controls.Add(txtBusqueda);
+
+            // btnBuscar
+            btnBuscar.Text = "🔎 Buscar";
+            btnBuscar.Location = new Point(500, 10);
+            btnBuscar.Name = "btnBuscar";
+            btnBuscar.Size = new Size(100, 30);
+            btnBuscar.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+            btnBuscar.BackColor = Color.FromArgb(52, 152, 219);
+            btnBuscar.ForeColor = Color.White;
+            btnBuscar.FlatStyle = FlatStyle.Flat;
+            btnBuscar.FlatAppearance.BorderSize = 0;
+            btnBuscar.Cursor = Cursors.Hand;
+            panelBusqueda.Controls.Add(btnBuscar);
+
             // dgvApartamentos
-            dgvApartamentos.ColumnHeadersHeight = 35;
+            dgvApartamentos.ColumnHeadersHeight = 40;
             dgvApartamentos.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, dataGridViewTextBoxColumn2, dataGridViewTextBoxColumn3, dataGridViewTextBoxColumn4, dataGridViewTextBoxColumn5, dataGridViewTextBoxColumn6, dataGridViewTextBoxColumn7, dataGridViewTextBoxColumn8 });
-            dgvApartamentos.Location = new Point(20, 70);
+            dgvApartamentos.Location = new Point(20, 130);
             dgvApartamentos.Name = "dgvApartamentos";
             dgvApartamentos.RowHeadersWidth = 40;
-            dgvApartamentos.Size = new Size(880, 280);
+            dgvApartamentos.Size = new Size(880, 300);
             dgvApartamentos.TabIndex = 1;
             dgvApartamentos.BackgroundColor = Color.White;
             dgvApartamentos.GridColor = Color.FromArgb(236, 240, 241);
@@ -112,11 +159,12 @@ namespace SistemaGestionResidencial.Vistas
             dgvApartamentos.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             dgvApartamentos.EnableHeadersVisualStyles = false;
             dgvApartamentos.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(244, 246, 247);
+            dgvApartamentos.RowTemplate.Height = 30;
 
             // panelFormulario
-            panelFormulario.Location = new Point(20, 370);
-            panelFormulario.Size = new Size(880, 220);
-            panelFormulario.BackColor = Color.FromArgb(248, 249, 250);
+            panelFormulario.Location = new Point(20, 450);
+            panelFormulario.Size = new Size(880, 250);
+            panelFormulario.BackColor = Color.White;
             panelFormulario.BorderStyle = BorderStyle.FixedSingle;
 
             // lblFormulario
@@ -238,7 +286,7 @@ namespace SistemaGestionResidencial.Vistas
             panelFormulario.Controls.Add(lblEstado);
 
             // cmbEstado
-            cmbEstado.Items.AddRange(new object[] { "Disponible", "Ocupado", "Mantenimiento" });
+            cmbEstado.Items.AddRange(new object[] { "Disponible", "Ocupado", "En Mantenimiento" });
             cmbEstado.Location = new Point(550, 75);
             cmbEstado.Name = "cmbEstado";
             cmbEstado.Size = new Size(120, 25);
@@ -376,14 +424,15 @@ namespace SistemaGestionResidencial.Vistas
             dataGridViewTextBoxColumn8.DefaultCellStyle.Font = new Font("Segoe UI", 9);
 
             // ApartamentoForm
-            ClientSize = new Size(920, 610);
+            ClientSize = new Size(920, 720);
             Controls.Add(panelFormulario);
+            Controls.Add(panelBusqueda);
             Controls.Add(lblTitulo);
             Controls.Add(dgvApartamentos);
             Name = "ApartamentoForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Gestión de Apartamentos";
-            BackColor = Color.FromArgb(236, 240, 241);
+            BackColor = Color.FromArgb(248, 249, 250);
             Font = new Font("Segoe UI", 9);
             ((System.ComponentModel.ISupportInitialize)dgvApartamentos).EndInit();
             ResumeLayout(false);
@@ -454,9 +503,9 @@ namespace SistemaGestionResidencial.Vistas
                     Numero = txtNumero.Text,
                     Bloque = txtBloque.Text,
                     Piso = int.TryParse(txtPiso.Text, out int piso) ? piso : 1,
-                    NumHabitaciones = int.TryParse(txtNumHabitaciones.Text, out int numHab) ? numHab : 0,
-                    MetrosCuadrados = decimal.TryParse(txtMetrosCuadrados.Text, out decimal m2) ? (double)m2 : 0,
-                    PrecioAlquiler = decimal.TryParse(txtPrecioAlquiler.Text, out decimal precio) ? precio : 0,
+                    NumHabitaciones = int.TryParse(txtNumHabitaciones.Text, out int numHab) ? numHab : 1,
+                    MetrosCuadrados = double.TryParse(txtMetrosCuadrados.Text, out double m2) ? m2 : 20,
+                    PrecioAlquiler = decimal.TryParse(txtPrecioAlquiler.Text, out decimal precio) ? precio : 100,
                     Estado = cmbEstado.SelectedItem?.ToString() == "Disponible" ? EstadoApartamento.Disponible :
                              cmbEstado.SelectedItem?.ToString() == "Ocupado" ? EstadoApartamento.Ocupado :
                              EstadoApartamento.EnMantenimiento,
@@ -496,9 +545,9 @@ namespace SistemaGestionResidencial.Vistas
                 apartamento.Numero = txtNumero.Text;
                 apartamento.Bloque = txtBloque.Text;
                 apartamento.Piso = int.TryParse(txtPiso.Text, out int piso) ? piso : 1;
-                apartamento.NumHabitaciones = int.TryParse(txtNumHabitaciones.Text, out int numHab) ? numHab : 0;
-                apartamento.MetrosCuadrados = decimal.TryParse(txtMetrosCuadrados.Text, out decimal m2) ? (double)m2 : 0;
-                apartamento.PrecioAlquiler = decimal.TryParse(txtPrecioAlquiler.Text, out decimal precio) ? precio : 0;
+                apartamento.NumHabitaciones = int.TryParse(txtNumHabitaciones.Text, out int numHab) ? numHab : 1;
+                apartamento.MetrosCuadrados = double.TryParse(txtMetrosCuadrados.Text, out double m2) ? m2 : 20;
+                apartamento.PrecioAlquiler = decimal.TryParse(txtPrecioAlquiler.Text, out decimal precio) ? precio : 100;
                 apartamento.Estado = cmbEstado.SelectedItem?.ToString() == "Disponible" ? EstadoApartamento.Disponible :
                                    cmbEstado.SelectedItem?.ToString() == "Ocupado" ? EstadoApartamento.Ocupado :
                                    EstadoApartamento.EnMantenimiento;
