@@ -1,5 +1,7 @@
 using SistemaGestionResidencial.Models;
 
+//Data
+
 namespace SistemaGestionResidencial.Data
 {
     public static class DbInitializer
