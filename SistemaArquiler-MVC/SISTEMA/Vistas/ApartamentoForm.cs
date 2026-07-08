@@ -78,7 +78,7 @@ namespace SistemaGestionResidencial.Vistas
             Panel panelFormulario = new Panel();
             Label lblFormulario = new Label();
             Panel panelBusqueda = new Panel();
-            TextBox txtBusqueda = new TextBox();
+            txtBusqueda = new TextBox();
             Button btnBuscar = new Button();
             Label lblBusqueda = new Label();
             dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
