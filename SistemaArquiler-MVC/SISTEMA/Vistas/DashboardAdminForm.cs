@@ -57,11 +57,12 @@ namespace SistemaGestionResidencial.Vistas
             this.AutoScroll = true;
 
             // lblTitulo
-            lblTitulo.Text = "📊 Dashboard Administrador";
-            lblTitulo.Font = new Font("Segoe UI", 20, FontStyle.Bold);
+            lblTitulo.Text = "🏢 SISTEMA DE GESTIÓN RESIDENCIAL";
+            lblTitulo.Font = new Font("Segoe UI", 28, FontStyle.Bold);
             lblTitulo.ForeColor = Color.FromArgb(45, 52, 54);
             lblTitulo.Location = new Point(30, 20);
-            lblTitulo.Size = new Size(400, 40);
+            lblTitulo.Size = new Size(800, 50);
+            lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
 
             // panelMetricas
             panelMetricas.Location = new Point(30, 80);
@@ -129,30 +130,7 @@ namespace SistemaGestionResidencial.Vistas
             lblPagosMesValor.Size = new Size(180, 40);
             panelMetricas.Controls.Add(lblPagosMesValor);
 
-            // panelGraficos
-            panelGraficos.Location = new Point(30, 250);
-            panelGraficos.Size = new Size(840, 300);
-            panelGraficos.BackColor = Color.White;
-            panelGraficos.BorderStyle = BorderStyle.FixedSingle;
-
-            Label lblGraficos = new Label();
-            lblGraficos.Text = "📈 Gráficos y Reportes";
-            lblGraficos.Font = new Font("Segoe UI", 14, FontStyle.Bold);
-            lblGraficos.ForeColor = Color.FromArgb(45, 52, 54);
-            lblGraficos.Location = new Point(20, 20);
-            lblGraficos.Size = new Size(200, 30);
-            panelGraficos.Controls.Add(lblGraficos);
-
-            Label lblPlaceholder = new Label();
-            lblPlaceholder.Text = "Aquí se mostrarán los gráficos de ingresos, ocupación y más...";
-            lblPlaceholder.Font = new Font("Segoe UI", 12);
-            lblPlaceholder.ForeColor = Color.FromArgb(127, 140, 141);
-            lblPlaceholder.Location = new Point(20, 80);
-            lblPlaceholder.Size = new Size(800, 30);
-            panelGraficos.Controls.Add(lblPlaceholder);
-
             // Agregar controles al form
-            Controls.Add(panelGraficos);
             Controls.Add(panelMetricas);
             Controls.Add(lblTitulo);
 

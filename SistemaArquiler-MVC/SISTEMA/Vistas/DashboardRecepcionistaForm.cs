@@ -47,11 +47,12 @@ namespace SistemaGestionResidencial.Vistas
             this.AutoScroll = true;
 
             // lblTitulo
-            lblTitulo.Text = "📋 Dashboard Recepcionista";
-            lblTitulo.Font = new Font("Segoe UI", 20, FontStyle.Bold);
+            lblTitulo.Text = "🏢 SISTEMA DE GESTIÓN RESIDENCIAL";
+            lblTitulo.Font = new Font("Segoe UI", 28, FontStyle.Bold);
             lblTitulo.ForeColor = Color.FromArgb(45, 52, 54);
             lblTitulo.Location = new Point(30, 20);
-            lblTitulo.Size = new Size(400, 40);
+            lblTitulo.Size = new Size(800, 50);
+            lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
 
             // panelMetricas
             panelMetricas.Location = new Point(30, 80);
@@ -89,67 +90,7 @@ namespace SistemaGestionResidencial.Vistas
             lblContratosProximosVencerValor.Size = new Size(200, 40);
             panelMetricas.Controls.Add(lblContratosProximosVencerValor);
 
-            // panelAcciones
-            panelAcciones.Location = new Point(30, 250);
-            panelAcciones.Size = new Size(840, 300);
-            panelAcciones.BackColor = Color.White;
-            panelAcciones.BorderStyle = BorderStyle.FixedSingle;
-
-            Label lblAcciones = new Label();
-            lblAcciones.Text = "⚡ Acciones Rápidas";
-            lblAcciones.Font = new Font("Segoe UI", 14, FontStyle.Bold);
-            lblAcciones.ForeColor = Color.FromArgb(45, 52, 54);
-            lblAcciones.Location = new Point(20, 20);
-            lblAcciones.Size = new Size(200, 30);
-            panelAcciones.Controls.Add(lblAcciones);
-
-            // Botones de acción rápida
-            Button btnRegistrarPago = new Button();
-            btnRegistrarPago.Text = "💰 Registrar Pago";
-            btnRegistrarPago.Location = new Point(20, 70);
-            btnRegistrarPago.Size = new Size(200, 50);
-            btnRegistrarPago.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            btnRegistrarPago.BackColor = Color.FromArgb(46, 204, 113);
-            btnRegistrarPago.ForeColor = Color.White;
-            btnRegistrarPago.FlatStyle = FlatStyle.Flat;
-            btnRegistrarPago.FlatAppearance.BorderSize = 0;
-            btnRegistrarPago.Cursor = Cursors.Hand;
-            panelAcciones.Controls.Add(btnRegistrarPago);
-
-            Button btnNuevoContrato = new Button();
-            btnNuevoContrato.Text = "📄 Nuevo Contrato";
-            btnNuevoContrato.Location = new Point(240, 70);
-            btnNuevoContrato.Size = new Size(200, 50);
-            btnNuevoContrato.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            btnNuevoContrato.BackColor = Color.FromArgb(52, 152, 219);
-            btnNuevoContrato.ForeColor = Color.White;
-            btnNuevoContrato.FlatStyle = FlatStyle.Flat;
-            btnNuevoContrato.FlatAppearance.BorderSize = 0;
-            btnNuevoContrato.Cursor = Cursors.Hand;
-            panelAcciones.Controls.Add(btnNuevoContrato);
-
-            Button btnVerInquilinos = new Button();
-            btnVerInquilinos.Text = "👥 Ver Inquilinos";
-            btnVerInquilinos.Location = new Point(460, 70);
-            btnVerInquilinos.Size = new Size(200, 50);
-            btnVerInquilinos.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            btnVerInquilinos.BackColor = Color.FromArgb(155, 89, 182);
-            btnVerInquilinos.ForeColor = Color.White;
-            btnVerInquilinos.FlatStyle = FlatStyle.Flat;
-            btnVerInquilinos.FlatAppearance.BorderSize = 0;
-            btnVerInquilinos.Cursor = Cursors.Hand;
-            panelAcciones.Controls.Add(btnVerInquilinos);
-
-            Label lblInfo = new Label();
-            lblInfo.Text = "📌 Utilice estas acciones para realizar tareas comunes rápidamente";
-            lblInfo.Font = new Font("Segoe UI", 10);
-            lblInfo.ForeColor = Color.FromArgb(127, 140, 141);
-            lblInfo.Location = new Point(20, 140);
-            lblInfo.Size = new Size(800, 30);
-            panelAcciones.Controls.Add(lblInfo);
-
             // Agregar controles al form
-            Controls.Add(panelAcciones);
             Controls.Add(panelMetricas);
             Controls.Add(lblTitulo);
 

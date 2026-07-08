@@ -139,6 +139,7 @@ namespace SistemaGestionResidencial.Vistas
             btnBuscar.FlatStyle = FlatStyle.Flat;
             btnBuscar.FlatAppearance.BorderSize = 0;
             btnBuscar.Cursor = Cursors.Hand;
+            btnBuscar.Click += BtnBuscar_Click;
             panelBusqueda.Controls.Add(btnBuscar);
 
             // dgvApartamentos
@@ -459,6 +460,11 @@ namespace SistemaGestionResidencial.Vistas
             LimpiarCampos();
         }
 
+        private void BtnBuscar_Click(object sender, EventArgs e)
+        {
+            BuscarApartamentos();
+        }
+
         private void CargarApartamentos()
         {
             try
@@ -483,6 +489,44 @@ namespace SistemaGestionResidencial.Vistas
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar apartamentos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BuscarApartamentos()
+        {
+            try
+            {
+                string busqueda = txtBusqueda.Text.ToLower();
+                if (string.IsNullOrWhiteSpace(busqueda))
+                {
+                    CargarApartamentos();
+                    return;
+                }
+
+                dgvApartamentos.Rows.Clear();
+                var apartamentos = _apartamentoRepository.ObtenerTodos()
+                    .Where(a => a.Numero.ToLower().Contains(busqueda) ||
+                               a.Bloque.ToLower().Contains(busqueda) ||
+                               a.Piso.ToString().Contains(busqueda) ||
+                               a.Estado.ToString().ToLower().Contains(busqueda));
+
+                foreach (var apt in apartamentos)
+                {
+                    dgvApartamentos.Rows.Add(
+                        apt.Id,
+                        apt.Numero,
+                        apt.Bloque,
+                        apt.Piso,
+                        apt.NumHabitaciones,
+                        apt.MetrosCuadrados,
+                        apt.PrecioAlquiler.ToString("C2"),
+                        apt.Estado.ToString()
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al buscar apartamentos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

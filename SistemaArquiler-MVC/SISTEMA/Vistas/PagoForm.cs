@@ -136,6 +136,7 @@ namespace SistemaGestionResidencial.Vistas
             btnBuscarPanel.FlatStyle = FlatStyle.Flat;
             btnBuscarPanel.FlatAppearance.BorderSize = 0;
             btnBuscarPanel.Cursor = Cursors.Hand;
+            btnBuscarPanel.Click += BtnBuscar_Click;
             panelBusqueda.Controls.Add(btnBuscarPanel);
 
             // dgvPagos
@@ -444,13 +445,50 @@ namespace SistemaGestionResidencial.Vistas
                         pago.FechaPago.ToShortDateString(),
                         pago.Monto.ToString("C2"),
                         pago.MetodoPago.ToString(),
-                        pago.Referencia ?? ""
+                        pago.Referencia ?? "",
+                        pago.Estado.ToString()
                     );
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar pagos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BuscarPagos()
+        {
+            try
+            {
+                string busqueda = txtBusqueda.Text.ToLower();
+                if (string.IsNullOrWhiteSpace(busqueda))
+                {
+                    CargarPagos();
+                    return;
+                }
+
+                dgvPagos.Rows.Clear();
+                var pagos = _pagoRepository.ObtenerTodos()
+                    .Where(p => p.ContratoId.ToString().Contains(busqueda) ||
+                               (p.Referencia ?? "").ToLower().Contains(busqueda) ||
+                               p.Estado.ToString().ToLower().Contains(busqueda));
+
+                foreach (var pago in pagos)
+                {
+                    dgvPagos.Rows.Add(
+                        pago.Id,
+                        pago.ContratoId,
+                        pago.FechaPago.ToShortDateString(),
+                        pago.Monto.ToString("C2"),
+                        pago.MetodoPago.ToString(),
+                        pago.Referencia ?? "",
+                        pago.Estado.ToString()
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al buscar pagos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -472,6 +510,11 @@ namespace SistemaGestionResidencial.Vistas
         private void BtnLimpiar_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
+        }
+
+        private void BtnBuscar_Click(object sender, EventArgs e)
+        {
+            BuscarPagos();
         }
 
         private void AgregarPago()

@@ -144,6 +144,7 @@ namespace SistemaGestionResidencial.Vistas
             btnBuscarPanel.FlatStyle = FlatStyle.Flat;
             btnBuscarPanel.FlatAppearance.BorderSize = 0;
             btnBuscarPanel.Cursor = Cursors.Hand;
+            btnBuscarPanel.Click += BtnBuscar_Click;
             panelBusqueda.Controls.Add(btnBuscarPanel);
 
             // dgvContratos
@@ -469,6 +470,11 @@ namespace SistemaGestionResidencial.Vistas
             LimpiarCampos();
         }
 
+        private void BtnBuscar_Click(object sender, EventArgs e)
+        {
+            BuscarContratos();
+        }
+
         private void CargarCombos()
         {
             try
@@ -513,6 +519,44 @@ namespace SistemaGestionResidencial.Vistas
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar contratos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BuscarContratos()
+        {
+            try
+            {
+                string busqueda = txtBusqueda.Text.ToLower();
+                if (string.IsNullOrWhiteSpace(busqueda))
+                {
+                    CargarContratos();
+                    return;
+                }
+
+                dgvContratos.Rows.Clear();
+                var contratos = _contratoRepository.ObtenerTodos()
+                    .Where(c => (c.Apartamento?.Numero ?? "").ToLower().Contains(busqueda) ||
+                               (c.Inquilino?.Nombre ?? "").ToLower().Contains(busqueda) ||
+                               (c.Inquilino?.Apellido ?? "").ToLower().Contains(busqueda) ||
+                               c.Estado.ToString().ToLower().Contains(busqueda));
+
+                foreach (var contrato in contratos)
+                {
+                    dgvContratos.Rows.Add(
+                        contrato.Id,
+                        contrato.Apartamento?.Numero ?? "N/A",
+                        contrato.Inquilino?.Nombre + " " + contrato.Inquilino?.Apellido ?? "N/A",
+                        contrato.FechaInicio.ToShortDateString(),
+                        contrato.FechaFin.ToShortDateString(),
+                        contrato.MontoMensual.ToString("C2"),
+                        contrato.Deposito.ToString("C2"),
+                        contrato.Estado.ToString()
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al buscar contratos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
