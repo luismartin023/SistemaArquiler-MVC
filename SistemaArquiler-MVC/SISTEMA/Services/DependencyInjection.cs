@@ -4,6 +4,7 @@ using SistemaGestionResidencial.Data;
 using SistemaGestionResidencial.Interfaces;
 using SistemaGestionResidencial.Repositories;
 using SistemaGestionResidencial.Controllers;
+using SistemaGestionResidencial.Vistas;
 
 namespace SistemaGestionResidencial.Services
 {
@@ -32,6 +33,18 @@ namespace SistemaGestionResidencial.Services
             services.AddScoped<PagoController>();
             services.AddScoped<AuthController>();
             services.AddScoped<DashboardController>();
+
+            // Forms (Vistas)
+            services.AddScoped<LoginForm>();
+            services.AddScoped<MainForm>();
+            services.AddScoped<ApartamentoForm>();
+            services.AddScoped<InquilinoForm>();
+            services.AddScoped<ContratoForm>();
+            services.AddScoped<PagoForm>();
+            services.AddScoped<DashboardAdminForm>();
+            services.AddScoped<DashboardRecepcionistaForm>();
+            services.AddScoped<DashboardUsuarioForm>();
+            services.AddScoped<CambiarPasswordForm>();
 
             return services;
         }

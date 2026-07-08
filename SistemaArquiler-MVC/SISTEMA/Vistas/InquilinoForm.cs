@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using SistemaGestionResidencial.Interfaces;
+using SistemaGestionResidencial.Models;
 
 namespace SistemaGestionResidencial.Vistas
 {
@@ -37,9 +39,13 @@ namespace SistemaGestionResidencial.Vistas
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
 
-        public InquilinoForm()
+        private readonly IInquilinoRepository _inquilinoRepository;
+
+        public InquilinoForm(IInquilinoRepository inquilinoRepository)
         {
+            _inquilinoRepository = inquilinoRepository;
             InitializeComponent();
+            CargarInquilinos();
         }
 
         private void InitializeComponent()
@@ -433,27 +439,163 @@ namespace SistemaGestionResidencial.Vistas
 
         private void CargarInquilinos()
         {
-            dgvInquilinos.Rows.Clear();
+            try
+            {
+                dgvInquilinos.Rows.Clear();
+                var inquilinos = _inquilinoRepository.ObtenerTodos();
+                
+                foreach (var inq in inquilinos)
+                {
+                    dgvInquilinos.Rows.Add(
+                        inq.Id,
+                        inq.Nombre,
+                        inq.Apellido,
+                        inq.NumeroDocumento,
+                        inq.TipoDocumento.ToString(),
+                        inq.Telefono,
+                        inq.Email
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar inquilinos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void BuscarInquilino()
         {
-            MessageBox.Show("Funcionalidad de buscar inquilino pendiente de implementación");
+            try
+            {
+                if (string.IsNullOrWhiteSpace(txtBusqueda.Text))
+                {
+                    CargarInquilinos();
+                    return;
+                }
+
+                var inquilinos = _inquilinoRepository.BuscarPorNombre(txtBusqueda.Text);
+                dgvInquilinos.Rows.Clear();
+                
+                foreach (var inq in inquilinos)
+                {
+                    dgvInquilinos.Rows.Add(
+                        inq.Id,
+                        inq.Nombre,
+                        inq.Apellido,
+                        inq.NumeroDocumento,
+                        inq.TipoDocumento.ToString(),
+                        inq.Telefono,
+                        inq.Email
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al buscar inquilinos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void AgregarInquilino()
         {
-            MessageBox.Show("Funcionalidad de agregar inquilino pendiente de implementación");
+            try
+            {
+                if (string.IsNullOrWhiteSpace(txtNombre.Text) || 
+                    string.IsNullOrWhiteSpace(txtApellido.Text) ||
+                    string.IsNullOrWhiteSpace(txtNumeroDocumento.Text))
+                {
+                    MessageBox.Show("Por favor complete los campos obligatorios", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var inquilino = new Inquilino
+                {
+                    Nombre = txtNombre.Text,
+                    Apellido = txtApellido.Text,
+                    NumeroDocumento = txtNumeroDocumento.Text,
+                    TipoDocumento = cmbTipoDocumento.SelectedItem?.ToString() == "DNI" ? TipoDocumento.DNI :
+                                   cmbTipoDocumento.SelectedItem?.ToString() == "Pasaporte" ? TipoDocumento.Pasaporte :
+                                   TipoDocumento.CarnetExtranjeria,
+                    Telefono = txtTelefono.Text,
+                    Email = txtEmail.Text,
+                    Direccion = txtDireccion.Text
+                };
+
+                _inquilinoRepository.Agregar(inquilino);
+                MessageBox.Show("Inquilino agregado exitosamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimpiarCampos();
+                CargarInquilinos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al agregar inquilino: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void EditarInquilino()
         {
-            MessageBox.Show("Funcionalidad de editar inquilino pendiente de implementación");
+            try
+            {
+                if (dgvInquilinos.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Seleccione un inquilino para editar", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgvInquilinos.SelectedRows[0].Cells[0].Value);
+                var inquilino = _inquilinoRepository.ObtenerPorId(id);
+                
+                if (inquilino == null)
+                {
+                    MessageBox.Show("Inquilino no encontrado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                inquilino.Nombre = txtNombre.Text;
+                inquilino.Apellido = txtApellido.Text;
+                inquilino.NumeroDocumento = txtNumeroDocumento.Text;
+                inquilino.TipoDocumento = cmbTipoDocumento.SelectedItem?.ToString() == "DNI" ? TipoDocumento.DNI :
+                                        cmbTipoDocumento.SelectedItem?.ToString() == "Pasaporte" ? TipoDocumento.Pasaporte :
+                                        TipoDocumento.CarnetExtranjeria;
+                inquilino.Telefono = txtTelefono.Text;
+                inquilino.Email = txtEmail.Text;
+                inquilino.Direccion = txtDireccion.Text;
+
+                _inquilinoRepository.Actualizar(inquilino);
+                MessageBox.Show("Inquilino actualizado exitosamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimpiarCampos();
+                CargarInquilinos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al editar inquilino: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void EliminarInquilino()
         {
-            MessageBox.Show("Funcionalidad de eliminar inquilino pendiente de implementación");
+            try
+            {
+                if (dgvInquilinos.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Seleccione un inquilino para eliminar", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgvInquilinos.SelectedRows[0].Cells[0].Value);
+                
+                var result = MessageBox.Show("¿Está seguro de eliminar este inquilino?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                
+                if (result == DialogResult.Yes)
+                {
+                    _inquilinoRepository.Eliminar(id);
+                    MessageBox.Show("Inquilino eliminado exitosamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CargarInquilinos();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al eliminar inquilino: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LimpiarCampos()

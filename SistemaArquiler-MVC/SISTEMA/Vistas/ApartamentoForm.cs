@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using SistemaGestionResidencial.Interfaces;
+using SistemaGestionResidencial.Models;
 
 namespace SistemaGestionResidencial.Vistas
 {
@@ -38,9 +40,13 @@ namespace SistemaGestionResidencial.Vistas
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
 
-        public ApartamentoForm()
+        private readonly IApartamentoRepository _apartamentoRepository;
+
+        public ApartamentoForm(IApartamentoRepository apartamentoRepository)
         {
+            _apartamentoRepository = apartamentoRepository;
             InitializeComponent();
+            CargarApartamentos();
         }
 
         private void InitializeComponent()
@@ -406,22 +412,134 @@ namespace SistemaGestionResidencial.Vistas
 
         private void CargarApartamentos()
         {
-            dgvApartamentos.Rows.Clear();
+            try
+            {
+                dgvApartamentos.Rows.Clear();
+                var apartamentos = _apartamentoRepository.ObtenerTodos();
+                
+                foreach (var apt in apartamentos)
+                {
+                    dgvApartamentos.Rows.Add(
+                        apt.Id,
+                        apt.Numero,
+                        apt.Bloque,
+                        apt.Piso,
+                        apt.NumHabitaciones,
+                        apt.MetrosCuadrados,
+                        apt.PrecioAlquiler.ToString("C2"),
+                        apt.Estado.ToString()
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar apartamentos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void AgregarApartamento()
         {
-            MessageBox.Show("Funcionalidad de agregar apartamento pendiente de implementación");
+            try
+            {
+                if (string.IsNullOrWhiteSpace(txtNumero.Text) || 
+                    string.IsNullOrWhiteSpace(txtBloque.Text) ||
+                    string.IsNullOrWhiteSpace(txtPiso.Text))
+                {
+                    MessageBox.Show("Por favor complete los campos obligatorios", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var apartamento = new Apartamento
+                {
+                    Numero = txtNumero.Text,
+                    Bloque = txtBloque.Text,
+                    Piso = txtPiso.Text,
+                    NumHabitaciones = int.TryParse(txtNumHabitaciones.Text, out int numHab) ? numHab : 0,
+                    MetrosCuadrados = decimal.TryParse(txtMetrosCuadrados.Text, out decimal m2) ? m2 : 0,
+                    PrecioAlquiler = decimal.TryParse(txtPrecioAlquiler.Text, out decimal precio) ? precio : 0,
+                    Estado = cmbEstado.SelectedItem?.ToString() == "Disponible" ? EstadoApartamento.Disponible :
+                             cmbEstado.SelectedItem?.ToString() == "Ocupado" ? EstadoApartamento.Ocupado :
+                             EstadoApartamento.Mantenimiento,
+                    Descripcion = txtDescripcion.Text
+                };
+
+                _apartamentoRepository.Agregar(apartamento);
+                MessageBox.Show("Apartamento agregado exitosamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimpiarCampos();
+                CargarApartamentos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al agregar apartamento: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void EditarApartamento()
         {
-            MessageBox.Show("Funcionalidad de editar apartamento pendiente de implementación");
+            try
+            {
+                if (dgvApartamentos.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Seleccione un apartamento para editar", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgvApartamentos.SelectedRows[0].Cells[0].Value);
+                var apartamento = _apartamentoRepository.ObtenerPorId(id);
+                
+                if (apartamento == null)
+                {
+                    MessageBox.Show("Apartamento no encontrado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                apartamento.Numero = txtNumero.Text;
+                apartamento.Bloque = txtBloque.Text;
+                apartamento.Piso = txtPiso.Text;
+                apartamento.NumHabitaciones = int.TryParse(txtNumHabitaciones.Text, out int numHab) ? numHab : 0;
+                apartamento.MetrosCuadrados = decimal.TryParse(txtMetrosCuadrados.Text, out decimal m2) ? m2 : 0;
+                apartamento.PrecioAlquiler = decimal.TryParse(txtPrecioAlquiler.Text, out decimal precio) ? precio : 0;
+                apartamento.Estado = cmbEstado.SelectedItem?.ToString() == "Disponible" ? EstadoApartamento.Disponible :
+                                   cmbEstado.SelectedItem?.ToString() == "Ocupado" ? EstadoApartamento.Ocupado :
+                                   EstadoApartamento.Mantenimiento;
+                apartamento.Descripcion = txtDescripcion.Text;
+
+                _apartamentoRepository.Actualizar(apartamento);
+                MessageBox.Show("Apartamento actualizado exitosamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimpiarCampos();
+                CargarApartamentos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al editar apartamento: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void EliminarApartamento()
         {
-            MessageBox.Show("Funcionalidad de eliminar apartamento pendiente de implementación");
+            try
+            {
+                if (dgvApartamentos.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Seleccione un apartamento para eliminar", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgvApartamentos.SelectedRows[0].Cells[0].Value);
+                
+                var result = MessageBox.Show("¿Está seguro de eliminar este apartamento?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                
+                if (result == DialogResult.Yes)
+                {
+                    _apartamentoRepository.Eliminar(id);
+                    MessageBox.Show("Apartamento eliminado exitosamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CargarApartamentos();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al eliminar apartamento: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LimpiarCampos()

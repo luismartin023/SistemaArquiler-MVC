@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using SistemaGestionResidencial.Interfaces;
+using SistemaGestionResidencial.Models;
 
 namespace SistemaGestionResidencial.Vistas
 {
@@ -36,9 +38,18 @@ namespace SistemaGestionResidencial.Vistas
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
 
-        public ContratoForm()
+        private readonly IContratoRepository _contratoRepository;
+        private readonly IApartamentoRepository _apartamentoRepository;
+        private readonly IInquilinoRepository _inquilinoRepository;
+
+        public ContratoForm(IContratoRepository contratoRepository, IApartamentoRepository apartamentoRepository, IInquilinoRepository inquilinoRepository)
         {
+            _contratoRepository = contratoRepository;
+            _apartamentoRepository = apartamentoRepository;
+            _inquilinoRepository = inquilinoRepository;
             InitializeComponent();
+            CargarCombos();
+            CargarContratos();
         }
 
         private void InitializeComponent()
@@ -388,24 +399,149 @@ namespace SistemaGestionResidencial.Vistas
             LimpiarCampos();
         }
 
+        private void CargarCombos()
+        {
+            try
+            {
+                var apartamentos = _apartamentoRepository.ObtenerPorEstado(EstadoApartamento.Disponible);
+                cmbApartamento.DataSource = apartamentos.ToList();
+                cmbApartamento.DisplayMember = "Numero";
+                cmbApartamento.ValueMember = "Id";
+
+                var inquilinos = _inquilinoRepository.ObtenerTodos();
+                cmbInquilino.DataSource = inquilinos.ToList();
+                cmbInquilino.DisplayMember = "Nombre";
+                cmbInquilino.ValueMember = "Id";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar combos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void CargarContratos()
         {
-            dgvContratos.Rows.Clear();
+            try
+            {
+                dgvContratos.Rows.Clear();
+                var contratos = _contratoRepository.ObtenerTodos();
+                
+                foreach (var contrato in contratos)
+                {
+                    dgvContratos.Rows.Add(
+                        contrato.Id,
+                        contrato.Apartamento?.Numero ?? "N/A",
+                        contrato.Inquilino?.Nombre + " " + contrato.Inquilino?.Apellido ?? "N/A",
+                        contrato.FechaInicio.ToShortDateString(),
+                        contrato.FechaFin.ToShortDateString(),
+                        contrato.MontoMensual.ToString("C2"),
+                        contrato.Deposito.ToString("C2"),
+                        contrato.Estado.ToString()
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar contratos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void AgregarContrato()
         {
-            MessageBox.Show("Funcionalidad de agregar contrato pendiente de implementación");
+            try
+            {
+                if (cmbApartamento.SelectedIndex == -1 || cmbInquilino.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Por favor seleccione apartamento e inquilino", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var contrato = new Contrato
+                {
+                    ApartamentoId = Convert.ToInt32(cmbApartamento.SelectedValue),
+                    InquilinoId = Convert.ToInt32(cmbInquilino.SelectedValue),
+                    FechaInicio = dtpFechaInicio.Value,
+                    FechaFin = dtpFechaFin.Value,
+                    MontoMensual = decimal.TryParse(txtMontoMensual.Text, out decimal monto) ? monto : 0,
+                    Deposito = decimal.TryParse(txtDeposito.Text, out decimal deposito) ? deposito : 0,
+                    Estado = cmbEstado.SelectedItem?.ToString() == "Activo" ? "Activo" : "Inactivo"
+                };
+
+                _contratoRepository.Agregar(contrato);
+                MessageBox.Show("Contrato agregado exitosamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimpiarCampos();
+                CargarContratos();
+                CargarCombos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al agregar contrato: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void EditarContrato()
         {
-            MessageBox.Show("Funcionalidad de editar contrato pendiente de implementación");
+            try
+            {
+                if (dgvContratos.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Seleccione un contrato para editar", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgvContratos.SelectedRows[0].Cells[0].Value);
+                var contrato = _contratoRepository.ObtenerPorId(id);
+                
+                if (contrato == null)
+                {
+                    MessageBox.Show("Contrato no encontrado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                contrato.ApartamentoId = Convert.ToInt32(cmbApartamento.SelectedValue);
+                contrato.InquilinoId = Convert.ToInt32(cmbInquilino.SelectedValue);
+                contrato.FechaInicio = dtpFechaInicio.Value;
+                contrato.FechaFin = dtpFechaFin.Value;
+                contrato.MontoMensual = decimal.TryParse(txtMontoMensual.Text, out decimal monto) ? monto : 0;
+                contrato.Deposito = decimal.TryParse(txtDeposito.Text, out decimal deposito) ? deposito : 0;
+                contrato.Estado = cmbEstado.SelectedItem?.ToString() == "Activo" ? "Activo" : "Inactivo";
+
+                _contratoRepository.Actualizar(contrato);
+                MessageBox.Show("Contrato actualizado exitosamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimpiarCampos();
+                CargarContratos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al editar contrato: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void EliminarContrato()
         {
-            MessageBox.Show("Funcionalidad de eliminar contrato pendiente de implementación");
+            try
+            {
+                if (dgvContratos.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Seleccione un contrato para eliminar", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgvContratos.SelectedRows[0].Cells[0].Value);
+                
+                var result = MessageBox.Show("¿Está seguro de eliminar este contrato?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                
+                if (result == DialogResult.Yes)
+                {
+                    _contratoRepository.Eliminar(id);
+                    MessageBox.Show("Contrato eliminado exitosamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CargarContratos();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al eliminar contrato: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LimpiarCampos()
