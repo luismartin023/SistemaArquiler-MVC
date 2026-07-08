@@ -33,6 +33,7 @@ namespace SistemaGestionResidencial.Vistas
             InitializeComponent();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Usuario Usuario
         {
             set
