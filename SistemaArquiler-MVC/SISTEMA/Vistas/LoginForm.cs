@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using SistemaGestionResidencial.Controllers;
+using SistemaGestionResidencial.Models;
 
 namespace SistemaGestionResidencial.Vistas
 {
@@ -16,8 +18,13 @@ namespace SistemaGestionResidencial.Vistas
         private Label lblSistema;
         private PictureBox pictureBoxLogo;
 
-        public LoginForm()
+        private readonly AuthController _authController;
+        private readonly IServiceProvider _serviceProvider;
+
+        public LoginForm(AuthController authController, IServiceProvider serviceProvider)
         {
+            _authController = authController;
+            _serviceProvider = serviceProvider;
             InitializeComponent();
         }
 
@@ -140,14 +147,35 @@ namespace SistemaGestionResidencial.Vistas
 
         private void BtnLogin_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtUsername.Text) || string.IsNullOrEmpty(txtPassword.Text))
+            try
             {
-                MessageBox.Show("Por favor, ingrese usuario y contraseña", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                if (string.IsNullOrEmpty(txtUsername.Text) || string.IsNullOrEmpty(txtPassword.Text))
+                {
+                    MessageBox.Show("Por favor, ingrese usuario y contraseña", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var usuario = _authController.Login(txtUsername.Text, txtPassword.Text);
+                
+                if (usuario == null)
+                {
+                    MessageBox.Show("Usuario o contraseña incorrectos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Login exitoso - abrir MainForm según el rol
+                this.Hide();
+                
+                var mainForm = _serviceProvider.GetRequiredService<MainForm>();
+                mainForm.UsuarioActual = usuario;
+                mainForm.Show();
+                
+                this.FormClosed += (s, args) => Application.Exit();
             }
-            
-            // Aquí iría la lógica de autenticación
-            MessageBox.Show("Funcionalidad de login pendiente de implementación", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al iniciar sesión: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void BtnCancelar_Click(object sender, EventArgs e)

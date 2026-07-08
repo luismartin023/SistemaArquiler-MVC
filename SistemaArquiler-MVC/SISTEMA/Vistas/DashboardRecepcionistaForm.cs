@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using SistemaGestionResidencial.Interfaces;
+using SistemaGestionResidencial.Models;
 
 namespace SistemaGestionResidencial.Vistas
 {
@@ -14,9 +16,15 @@ namespace SistemaGestionResidencial.Vistas
         private Panel panelMetricas;
         private Panel panelAcciones;
 
-        public DashboardRecepcionistaForm()
+        private readonly IContratoRepository _contratoRepository;
+        private readonly IPagoRepository _pagoRepository;
+
+        public DashboardRecepcionistaForm(IContratoRepository contratoRepository, IPagoRepository pagoRepository)
         {
+            _contratoRepository = contratoRepository;
+            _pagoRepository = pagoRepository;
             InitializeComponent();
+            CargarMetricas();
         }
 
         private void InitializeComponent()
@@ -150,7 +158,35 @@ namespace SistemaGestionResidencial.Vistas
 
         private void CargarMetricas()
         {
-            // Implementación pendiente - cargar métricas desde el DashboardController
+            try
+            {
+                // Pagos Pendientes (contratos activos sin pago este mes)
+                var contratosActivos = _contratoRepository.ObtenerContratosActivos();
+                int pagosPendientes = 0;
+                
+                foreach (var contrato in contratosActivos)
+                {
+                    var pagosMes = _pagoRepository.ObtenerPagosPorContrato(contrato.Id)
+                        .Where(p => p.FechaPago.Month == DateTime.Now.Month && p.FechaPago.Year == DateTime.Now.Year)
+                        .Count();
+                    
+                    if (pagosMes == 0)
+                        pagosPendientes++;
+                }
+                
+                lblPagosPendientesValor.Text = pagosPendientes.ToString();
+
+                // Contratos Próximos a Vencer (menos de 30 días)
+                var contratosProximosVencer = contratosActivos
+                    .Where(c => (c.FechaFin - DateTime.Now).Days <= 30 && (c.FechaFin - DateTime.Now).Days > 0)
+                    .Count();
+                
+                lblContratosProximosVencerValor.Text = contratosProximosVencer.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar métricas: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

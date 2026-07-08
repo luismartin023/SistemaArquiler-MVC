@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using SistemaGestionResidencial.Interfaces;
+using SistemaGestionResidencial.Models;
 
 namespace SistemaGestionResidencial.Vistas
 {
@@ -18,9 +20,17 @@ namespace SistemaGestionResidencial.Vistas
         private Panel panelMetricas;
         private Panel panelGraficos;
 
-        public DashboardAdminForm()
+        private readonly IApartamentoRepository _apartamentoRepository;
+        private readonly IContratoRepository _contratoRepository;
+        private readonly IPagoRepository _pagoRepository;
+
+        public DashboardAdminForm(IApartamentoRepository apartamentoRepository, IContratoRepository contratoRepository, IPagoRepository pagoRepository)
         {
+            _apartamentoRepository = apartamentoRepository;
+            _contratoRepository = contratoRepository;
+            _pagoRepository = pagoRepository;
             InitializeComponent();
+            CargarMetricas();
         }
 
         private void InitializeComponent()
@@ -151,7 +161,30 @@ namespace SistemaGestionResidencial.Vistas
 
         private void CargarMetricas()
         {
-            // Implementación pendiente - cargar métricas desde el DashboardController
+            try
+            {
+                // Total Apartamentos
+                var totalApartamentos = _apartamentoRepository.ObtenerTodos().Count();
+                lblTotalApartamentosValor.Text = totalApartamentos.ToString();
+
+                // Apartamentos Disponibles
+                var disponibles = _apartamentoRepository.ObtenerPorEstado(EstadoApartamento.Disponible).Count();
+                lblApartamentosDisponiblesValor.Text = disponibles.ToString();
+
+                // Contratos Activos
+                var contratosActivos = _contratoRepository.ObtenerContratosActivos().Count();
+                lblContratosActivosValor.Text = contratosActivos.ToString();
+
+                // Pagos del Mes
+                var pagosMes = _pagoRepository.ObtenerTodos()
+                    .Where(p => p.FechaPago.Month == DateTime.Now.Month && p.FechaPago.Year == DateTime.Now.Year)
+                    .Sum(p => p.Monto);
+                lblPagosMesValor.Text = pagosMes.ToString("C2");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar métricas: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

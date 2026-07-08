@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using SistemaGestionResidencial.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SistemaGestionResidencial.Vistas
 {
@@ -17,8 +19,12 @@ namespace SistemaGestionResidencial.Vistas
         private Panel panelMenu;
         private Panel panelContent;
 
-        public MainForm()
+        private readonly IServiceProvider _serviceProvider;
+        public Usuario? UsuarioActual { get; set; }
+
+        public MainForm(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
             InitializeComponent();
         }
 
@@ -57,7 +63,7 @@ namespace SistemaGestionResidencial.Vistas
             panelMenu.Controls.Add(lblTitulo);
             
             // lblUsuario
-            lblUsuario.Text = "👤 Usuario: Admin";
+            lblUsuario.Text = $"👤 {UsuarioActual?.Nombre ?? "Usuario"}";
             lblUsuario.Font = new Font("Segoe UI", 10);
             lblUsuario.ForeColor = Color.FromArgb(189, 195, 199);
             lblUsuario.Location = new Point(20, 80);
@@ -222,27 +228,88 @@ namespace SistemaGestionResidencial.Vistas
 
         private void CargarApartamentos()
         {
-            MessageBox.Show("Funcionalidad de cargar apartamentos pendiente de implementación");
+            try
+            {
+                var apartamentoForm = _serviceProvider.GetRequiredService<ApartamentoForm>();
+                apartamentoForm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir formulario de apartamentos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void CargarInquilinos()
         {
-            MessageBox.Show("Funcionalidad de cargar inquilinos pendiente de implementación");
+            try
+            {
+                var inquilinoForm = _serviceProvider.GetRequiredService<InquilinoForm>();
+                inquilinoForm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir formulario de inquilinos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void CargarContratos()
         {
-            MessageBox.Show("Funcionalidad de cargar contratos pendiente de implementación");
+            try
+            {
+                var contratoForm = _serviceProvider.GetRequiredService<ContratoForm>();
+                contratoForm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir formulario de contratos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void CargarPagos()
         {
-            MessageBox.Show("Funcionalidad de cargar pagos pendiente de implementación");
+            try
+            {
+                var pagoForm = _serviceProvider.GetRequiredService<PagoForm>();
+                pagoForm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir formulario de pagos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void CargarDashboard()
         {
-            MessageBox.Show("Funcionalidad de cargar dashboard pendiente de implementación");
+            try
+            {
+                Form dashboardForm;
+                
+                if (UsuarioActual?.Rol == Rol.Administrador)
+                {
+                    dashboardForm = _serviceProvider.GetRequiredService<DashboardAdminForm>();
+                }
+                else if (UsuarioActual?.Rol == Rol.Recepcionista)
+                {
+                    dashboardForm = _serviceProvider.GetRequiredService<DashboardRecepcionistaForm>();
+                }
+                else
+                {
+                    var dashboardUsuario = _serviceProvider.GetRequiredService<DashboardUsuarioForm>();
+                    // Usar reflexión para establecer el Usuario ya que no es un parámetro del constructor
+                    var usuarioProperty = dashboardUsuario.GetType().GetProperty("Usuario");
+                    if (usuarioProperty != null && UsuarioActual != null)
+                    {
+                        usuarioProperty.SetValue(dashboardUsuario, UsuarioActual);
+                    }
+                    dashboardForm = dashboardUsuario;
+                }
+                
+                dashboardForm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir dashboard: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

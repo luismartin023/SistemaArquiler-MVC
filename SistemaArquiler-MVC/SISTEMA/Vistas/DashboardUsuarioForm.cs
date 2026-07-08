@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using SistemaGestionResidencial.Interfaces;
+using SistemaGestionResidencial.Models;
 
 namespace SistemaGestionResidencial.Vistas
 {
@@ -19,9 +21,24 @@ namespace SistemaGestionResidencial.Vistas
         private Panel panelPagos;
         private DataGridView dgvPagosUsuario;
 
-        public DashboardUsuarioForm()
+        private readonly IPagoRepository _pagoRepository;
+        private readonly IContratoRepository _contratoRepository;
+        private Usuario _usuario;
+
+        public DashboardUsuarioForm(IPagoRepository pagoRepository, IContratoRepository contratoRepository)
         {
+            _pagoRepository = pagoRepository;
+            _contratoRepository = contratoRepository;
             InitializeComponent();
+        }
+
+        public Usuario Usuario
+        {
+            set
+            {
+                _usuario = value;
+                CargarInformacion();
+            }
         }
 
         private void InitializeComponent()
@@ -170,7 +187,53 @@ namespace SistemaGestionResidencial.Vistas
 
         private void CargarInformacion()
         {
-            // Implementación pendiente - cargar información del usuario desde el DashboardController
+            try
+            {
+                // Nombre del usuario
+                lblNombreValor.Text = _usuario.Nombre;
+
+                // Buscar contrato activo del usuario
+                var contratoActivo = _contratoRepository.ObtenerContratosActivos()
+                    .FirstOrDefault(c => c.InquilinoId == _usuario.Id);
+
+                if (contratoActivo != null)
+                {
+                    lblContratoValor.Text = $"Contrato #{contratoActivo.Id} - Activo";
+                    lblApartamentoValor.Text = contratoActivo.Apartamento?.Numero ?? "No asignado";
+                }
+                else
+                {
+                    lblContratoValor.Text = "Sin contrato activo";
+                    lblApartamentoValor.Text = "No asignado";
+                }
+
+                // Cargar pagos del usuario
+                if (contratoActivo != null)
+                {
+                    var pagos = _pagoRepository.ObtenerPagosPorContrato(contratoActivo.Id);
+                    lblPagosValor.Text = pagos.Count().ToString();
+
+                    dgvPagosUsuario.Rows.Clear();
+                    foreach (var pago in pagos)
+                    {
+                        dgvPagosUsuario.Rows.Add(
+                            pago.FechaPago.ToShortDateString(),
+                            pago.Monto.ToString("C2"),
+                            pago.MetodoPago.ToString(),
+                            "Pagado"
+                        );
+                    }
+                }
+                else
+                {
+                    lblPagosValor.Text = "0";
+                    dgvPagosUsuario.Rows.Clear();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar información: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
