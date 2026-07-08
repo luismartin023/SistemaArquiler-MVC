@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using SistemaGestionResidencial.Models;
@@ -20,6 +21,7 @@ namespace SistemaGestionResidencial.Vistas
         private Panel panelContent;
 
         private readonly IServiceProvider _serviceProvider;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Usuario? UsuarioActual { get; set; }
 
         public MainForm(IServiceProvider serviceProvider)

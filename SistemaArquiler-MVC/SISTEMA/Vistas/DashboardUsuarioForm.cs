@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using SistemaGestionResidencial.Interfaces;
@@ -32,6 +33,7 @@ namespace SistemaGestionResidencial.Vistas
             InitializeComponent();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Usuario Usuario
         {
             set
