@@ -286,7 +286,7 @@ namespace SistemaGestionResidencial.Vistas
             {
                 Form dashboardForm;
                 
-                if (UsuarioActual?.Rol == Rol.Administrador)
+                if (UsuarioActual?.Rol == Rol.Admin)
                 {
                     dashboardForm = _serviceProvider.GetRequiredService<DashboardAdminForm>();
                 }
