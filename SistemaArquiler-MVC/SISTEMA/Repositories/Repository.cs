@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SistemaGestionResidencial.Data;
 using SistemaGestionResidencial.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SistemaGestionResidencial.Repositories
 {
@@ -13,31 +15,31 @@ namespace SistemaGestionResidencial.Repositories
             _context = context;
         }
 
-        public IEnumerable<T> ObtenerTodos()
+        public virtual IEnumerable<T> ObtenerTodos()
         {
             return _context.Set<T>().ToList();
         }
 
-        public T? ObtenerPorId(int id)
+        public virtual T? ObtenerPorId(int id)
         {
             return _context.Set<T>().Find(id);
         }
 
-        public void Agregar(T entidad)
+        public virtual void Agregar(T entidad)
         {
             _context.Set<T>().Add(entidad);
             _context.SaveChanges();
         }
 
-        public void Actualizar(T entidad)
+        public virtual void Actualizar(T entidad)
         {
             _context.Set<T>().Update(entidad);
             _context.SaveChanges();
         }
 
-        public void Eliminar(int id)
+        public virtual void Eliminar(int id)
         {
-            var entidad = ObtenerPorId(id);
+            var entidad = _context.Set<T>().Find(id);
             if (entidad != null)
             {
                 _context.Set<T>().Remove(entidad);
