@@ -5,6 +5,9 @@ using SistemaGestionResidencial.Interfaces;
 using SistemaGestionResidencial.Repositories;
 using SistemaGestionResidencial.Controllers;
 using SistemaGestionResidencial.Vistas;
+using SistemaGestionResidencial.Models;
+
+
 
 namespace SistemaGestionResidencial.Services
 {

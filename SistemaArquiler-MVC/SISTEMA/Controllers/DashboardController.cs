@@ -41,7 +41,7 @@ namespace SistemaGestionResidencial.Controllers
             }
 
             var contrato = _context.Contratos.FirstOrDefault(c => c.InquilinoId == usuario.InquilinoId && c.Estado == "Activo");
-            var pagos = _context.Pagos.Where(p => p.ContratoId == contrato?.Id).ToList();
+            var pagos = contrato != null? _context.Pagos.Where(p => p.ContratoId == contrato.Id).ToList(): new List<Pago>();
 
             return new
             {

@@ -1,8 +1,8 @@
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-using SistemaGestionResidencial.Models;
 using Microsoft.Extensions.DependencyInjection;
+using SistemaGestionResidencial.Models;
+
+using System.ComponentModel;
+
 
 namespace SistemaGestionResidencial.Vistas
 {
@@ -20,6 +20,8 @@ namespace SistemaGestionResidencial.Vistas
         private Panel panelContent;
 
         private readonly IServiceProvider _serviceProvider;
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Usuario? UsuarioActual { get; set; }
 
         public MainForm(IServiceProvider serviceProvider)
@@ -40,20 +42,20 @@ namespace SistemaGestionResidencial.Vistas
             lblUsuario = new Label();
             panelMenu = new Panel();
             panelContent = new Panel();
-            
+
             SuspendLayout();
-            
+
             // Form
             this.Text = "Sistema de Gestión Residencial";
             this.Size = new Size(1000, 700);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(236, 240, 241);
-            
+
             // panelMenu
             panelMenu.Location = new Point(0, 0);
             panelMenu.Size = new Size(250, 700);
             panelMenu.BackColor = Color.FromArgb(52, 73, 94);
-            
+
             // lblTitulo
             lblTitulo.Text = "🏢 Sistema Residencial";
             lblTitulo.Font = new Font("Segoe UI", 16, FontStyle.Bold);
@@ -61,15 +63,15 @@ namespace SistemaGestionResidencial.Vistas
             lblTitulo.Location = new Point(20, 30);
             lblTitulo.Size = new Size(210, 40);
             panelMenu.Controls.Add(lblTitulo);
-            
+
             // lblUsuario
-            lblUsuario.Text = $"👤 {UsuarioActual?.Nombre ?? "Usuario"}";
+            lblUsuario.Text = $"👤 {UsuarioActual?.NombreUsuario ?? "Usuario"}";
             lblUsuario.Font = new Font("Segoe UI", 10);
             lblUsuario.ForeColor = Color.FromArgb(189, 195, 199);
             lblUsuario.Location = new Point(20, 80);
             lblUsuario.Size = new Size(210, 25);
             panelMenu.Controls.Add(lblUsuario);
-            
+
             // btnApartamentos
             btnApartamentos.Text = "🏢 Apartamentos";
             btnApartamentos.Location = new Point(20, 130);
@@ -85,7 +87,7 @@ namespace SistemaGestionResidencial.Vistas
             btnApartamentos.Padding = new Padding(10, 0, 0, 0);
             btnApartamentos.Click += BtnApartamentos_Click;
             panelMenu.Controls.Add(btnApartamentos);
-            
+
             // btnInquilinos
             btnInquilinos.Text = "👥 Inquilinos";
             btnInquilinos.Location = new Point(20, 190);
@@ -101,7 +103,7 @@ namespace SistemaGestionResidencial.Vistas
             btnInquilinos.Padding = new Padding(10, 0, 0, 0);
             btnInquilinos.Click += BtnInquilinos_Click;
             panelMenu.Controls.Add(btnInquilinos);
-            
+
             // btnContratos
             btnContratos.Text = "📄 Contratos";
             btnContratos.Location = new Point(20, 250);
@@ -117,7 +119,7 @@ namespace SistemaGestionResidencial.Vistas
             btnContratos.Padding = new Padding(10, 0, 0, 0);
             btnContratos.Click += BtnContratos_Click;
             panelMenu.Controls.Add(btnContratos);
-            
+
             // btnPagos
             btnPagos.Text = "💰 Pagos";
             btnPagos.Location = new Point(20, 310);
@@ -133,7 +135,7 @@ namespace SistemaGestionResidencial.Vistas
             btnPagos.Padding = new Padding(10, 0, 0, 0);
             btnPagos.Click += BtnPagos_Click;
             panelMenu.Controls.Add(btnPagos);
-            
+
             // btnDashboard
             btnDashboard.Text = "📊 Dashboard";
             btnDashboard.Location = new Point(20, 370);
@@ -149,7 +151,7 @@ namespace SistemaGestionResidencial.Vistas
             btnDashboard.Padding = new Padding(10, 0, 0, 0);
             btnDashboard.Click += BtnDashboard_Click;
             panelMenu.Controls.Add(btnDashboard);
-            
+
             // btnSalir
             btnSalir.Text = "🚪 Salir";
             btnSalir.Location = new Point(20, 610);
@@ -165,12 +167,12 @@ namespace SistemaGestionResidencial.Vistas
             btnSalir.Padding = new Padding(10, 0, 0, 0);
             btnSalir.Click += BtnSalir_Click;
             panelMenu.Controls.Add(btnSalir);
-            
+
             // panelContent
             panelContent.Location = new Point(250, 0);
             panelContent.Size = new Size(750, 700);
             panelContent.BackColor = Color.White;
-            
+
             // Label de bienvenida en panelContent
             Label lblBienvenida = new Label();
             lblBienvenida.Text = "👋 Bienvenido al Sistema de Gestión Residencial";
@@ -179,7 +181,7 @@ namespace SistemaGestionResidencial.Vistas
             lblBienvenida.Location = new Point(50, 100);
             lblBienvenida.Size = new Size(650, 50);
             panelContent.Controls.Add(lblBienvenida);
-            
+
             Label lblInstrucciones = new Label();
             lblInstrucciones.Text = "Seleccione una opción del menú lateral para comenzar";
             lblInstrucciones.Font = new Font("Segoe UI", 14);
@@ -187,11 +189,11 @@ namespace SistemaGestionResidencial.Vistas
             lblInstrucciones.Location = new Point(50, 160);
             lblInstrucciones.Size = new Size(650, 30);
             panelContent.Controls.Add(lblInstrucciones);
-            
+
             // Agregar paneles al form
             Controls.Add(panelContent);
             Controls.Add(panelMenu);
-            
+
             ResumeLayout(false);
             PerformLayout();
         }
@@ -283,8 +285,8 @@ namespace SistemaGestionResidencial.Vistas
             try
             {
                 Form dashboardForm;
-                
-                if (UsuarioActual?.Rol == Rol.Administrador)
+
+                if (UsuarioActual?.Rol == Rol.Admin)
                 {
                     dashboardForm = _serviceProvider.GetRequiredService<DashboardAdminForm>();
                 }
@@ -303,7 +305,7 @@ namespace SistemaGestionResidencial.Vistas
                     }
                     dashboardForm = dashboardUsuario;
                 }
-                
+
                 dashboardForm.ShowDialog();
             }
             catch (Exception ex)

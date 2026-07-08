@@ -24,7 +24,7 @@ namespace SistemaGestionResidencial
             var services = new ServiceCollection();
             string connectionString = "Data Source=residencial.db";
             DependencyInjection.ConfigureServices(services, connectionString);
-            
+
             ServiceProvider = services.BuildServiceProvider();
 
             // Iniciar aplicación con LoginForm

@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
 using SistemaGestionResidencial.Controllers;
 using SistemaGestionResidencial.Models;
 
@@ -39,9 +40,9 @@ namespace SistemaGestionResidencial.Vistas
             lblPassword = new Label();
             lblSistema = new Label();
             Panel panelLogin = new Panel();
-            
+
             SuspendLayout();
-            
+
             // Form
             this.Text = "Login - Sistema de Gestión Residencial";
             this.Size = new Size(450, 500);
@@ -49,13 +50,13 @@ namespace SistemaGestionResidencial.Vistas
             this.BackColor = Color.FromArgb(236, 240, 241);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            
+
             // panelLogin
             panelLogin.Location = new Point(50, 50);
             panelLogin.Size = new Size(350, 400);
             panelLogin.BackColor = Color.White;
             panelLogin.BorderStyle = BorderStyle.FixedSingle;
-            
+
             // lblSistema
             lblSistema.Text = "🏢 Sistema de Gestión";
             lblSistema.Font = new Font("Segoe UI", 14, FontStyle.Bold);
@@ -64,7 +65,7 @@ namespace SistemaGestionResidencial.Vistas
             lblSistema.Size = new Size(230, 30);
             lblSistema.TextAlign = ContentAlignment.MiddleCenter;
             panelLogin.Controls.Add(lblSistema);
-            
+
             // lblTitulo
             lblTitulo.Text = "Iniciar Sesión";
             lblTitulo.Font = new Font("Segoe UI", 20, FontStyle.Bold);
@@ -73,7 +74,7 @@ namespace SistemaGestionResidencial.Vistas
             lblTitulo.Size = new Size(230, 40);
             lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
             panelLogin.Controls.Add(lblTitulo);
-            
+
             // lblUsername
             lblUsername.Text = "Usuario:";
             lblUsername.Font = new Font("Segoe UI", 10);
@@ -81,7 +82,7 @@ namespace SistemaGestionResidencial.Vistas
             lblUsername.Location = new Point(50, 150);
             lblUsername.Size = new Size(70, 25);
             panelLogin.Controls.Add(lblUsername);
-            
+
             // txtUsername
             txtUsername.Location = new Point(50, 180);
             txtUsername.Name = "txtUsername";
@@ -91,7 +92,7 @@ namespace SistemaGestionResidencial.Vistas
             txtUsername.BackColor = Color.FromArgb(248, 249, 250);
             txtUsername.PlaceholderText = "Ingrese su usuario";
             panelLogin.Controls.Add(txtUsername);
-            
+
             // lblPassword
             lblPassword.Text = "Contraseña:";
             lblPassword.Font = new Font("Segoe UI", 10);
@@ -99,7 +100,7 @@ namespace SistemaGestionResidencial.Vistas
             lblPassword.Location = new Point(50, 220);
             lblPassword.Size = new Size(80, 25);
             panelLogin.Controls.Add(lblPassword);
-            
+
             // txtPassword
             txtPassword.Location = new Point(50, 250);
             txtPassword.Name = "txtPassword";
@@ -110,7 +111,7 @@ namespace SistemaGestionResidencial.Vistas
             txtPassword.PasswordChar = '•';
             txtPassword.PlaceholderText = "Ingrese su contraseña";
             panelLogin.Controls.Add(txtPassword);
-            
+
             // btnLogin
             btnLogin.Text = "🔐 Iniciar Sesión";
             btnLogin.Location = new Point(50, 310);
@@ -124,7 +125,7 @@ namespace SistemaGestionResidencial.Vistas
             btnLogin.Cursor = Cursors.Hand;
             btnLogin.Click += BtnLogin_Click;
             panelLogin.Controls.Add(btnLogin);
-            
+
             // btnCancelar
             btnCancelar.Text = "❌ Cancelar";
             btnCancelar.Location = new Point(50, 360);
@@ -137,10 +138,10 @@ namespace SistemaGestionResidencial.Vistas
             btnCancelar.Cursor = Cursors.Hand;
             btnCancelar.Click += BtnCancelar_Click;
             panelLogin.Controls.Add(btnCancelar);
-            
+
             // Agregar panel al form
             Controls.Add(panelLogin);
-            
+
             ResumeLayout(false);
             PerformLayout();
         }
@@ -156,7 +157,7 @@ namespace SistemaGestionResidencial.Vistas
                 }
 
                 var usuario = _authController.Login(txtUsername.Text, txtPassword.Text);
-                
+
                 if (usuario == null)
                 {
                     MessageBox.Show("Usuario o contraseña incorrectos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -165,11 +166,11 @@ namespace SistemaGestionResidencial.Vistas
 
                 // Login exitoso - abrir MainForm según el rol
                 this.Hide();
-                
+
                 var mainForm = _serviceProvider.GetRequiredService<MainForm>();
                 mainForm.UsuarioActual = usuario;
                 mainForm.Show();
-                
+
                 this.FormClosed += (s, args) => Application.Exit();
             }
             catch (Exception ex)
