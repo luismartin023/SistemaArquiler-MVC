@@ -1,4 +1,8 @@
-namespace SistemaArquiler_MVC
+using System;
+using System.Windows.Forms;
+using SistemaGestionResidencial.Vistas;
+
+namespace SistemaGestionResidencial
 {
     internal static class Program
     {
@@ -8,10 +12,9 @@ namespace SistemaArquiler_MVC
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new LoginForm());
         }
     }
 }

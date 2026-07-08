@@ -1,4 +1,5 @@
 using SistemaGestionResidencial.Models;
+using System.Collections.Generic;
 
 namespace SistemaGestionResidencial.Interfaces
 {
