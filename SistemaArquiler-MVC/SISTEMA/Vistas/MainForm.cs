@@ -63,9 +63,9 @@ namespace SistemaGestionResidencial.Vistas
             lblTitulo.Location = new Point(20, 30);
             lblTitulo.Size = new Size(210, 40);
             panelMenu.Controls.Add(lblTitulo);
-            
+
             // lblUsuario
-            lblUsuario.Text = $"👤 {UsuarioActual?.Nombre ?? "Usuario"}";
+            lblUsuario.Text = $"👤 {UsuarioActual?.NombreUsuario ?? "Usuario"}";
             lblUsuario.Font = new Font("Segoe UI", 10);
             lblUsuario.ForeColor = Color.FromArgb(189, 195, 199);
             lblUsuario.Location = new Point(20, 80);
