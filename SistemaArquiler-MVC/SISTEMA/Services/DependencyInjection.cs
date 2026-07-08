@@ -7,8 +7,6 @@ using SistemaGestionResidencial.Controllers;
 using SistemaGestionResidencial.Vistas;
 using SistemaGestionResidencial.Models;
 
-
-
 namespace SistemaGestionResidencial.Services
 {
     public static class DependencyInjection
@@ -20,13 +18,9 @@ namespace SistemaGestionResidencial.Services
                 options.UseSqlite(connectionString));
 
             // Repositories
-            services.AddScoped<IRepository<Apartamento>, ApartamentoRepository>();
             services.AddScoped<IApartamentoRepository, ApartamentoRepository>();
-            services.AddScoped<IRepository<Inquilino>, InquilinoRepository>();
             services.AddScoped<IInquilinoRepository, InquilinoRepository>();
-            services.AddScoped<IRepository<Contrato>, ContratoRepository>();
             services.AddScoped<IContratoRepository, ContratoRepository>();
-            services.AddScoped<IRepository<Pago>, PagoRepository>();
             services.AddScoped<IPagoRepository, PagoRepository>();
 
             // Controllers

@@ -27,6 +27,13 @@ namespace SistemaGestionResidencial
 
             ServiceProvider = services.BuildServiceProvider();
 
+            // Crear base de datos y datos iniciales
+            using (var scope = ServiceProvider.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ResidencialDbContext>();
+                DbInitializer.Initialize(dbContext);
+            }
+
             // Iniciar aplicación con LoginForm
             var loginForm = ServiceProvider.GetRequiredService<LoginForm>();
             Application.Run(loginForm);
