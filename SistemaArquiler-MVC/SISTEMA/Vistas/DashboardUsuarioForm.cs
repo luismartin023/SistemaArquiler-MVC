@@ -62,16 +62,18 @@ namespace SistemaGestionResidencial.Vistas
 
             // Form
             this.Text = "Mi Perfil";
-            this.Size = new Size(900, 600);
+            this.Size = new Size(920, 720);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = Color.FromArgb(236, 240, 241);
+            this.BackColor = Color.FromArgb(248, 249, 250);
+            this.AutoScroll = true;
 
             // lblTitulo
-            lblTitulo.Text = "👤 Mi Perfil";
-            lblTitulo.Font = new Font("Segoe UI", 20, FontStyle.Bold);
+            lblTitulo.Text = "🏢 SISTEMA DE GESTIÓN RESIDENCIAL";
+            lblTitulo.Font = new Font("Segoe UI", 28, FontStyle.Bold);
             lblTitulo.ForeColor = Color.FromArgb(45, 52, 54);
             lblTitulo.Location = new Point(30, 20);
-            lblTitulo.Size = new Size(200, 40);
+            lblTitulo.Size = new Size(800, 50);
+            lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
 
             // panelInfo
             panelInfo.Location = new Point(30, 80);

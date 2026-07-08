@@ -17,10 +17,13 @@ namespace SistemaGestionResidencial.Vistas
         private TextBox txtMontoMensual;
         private ComboBox cmbEstado;
         private TextBox txtDeposito;
+        private TextBox txtObservaciones;
+        private TextBox txtBusqueda;
         private Button btnAgregar;
         private Button btnEditar;
         private Button btnEliminar;
         private Button btnLimpiar;
+        private Button btnBuscarPanel;
         private Label lblTitulo;
         private Label lblApartamento;
         private Label lblInquilino;
@@ -29,6 +32,7 @@ namespace SistemaGestionResidencial.Vistas
         private Label lblMontoMensual;
         private Label lblEstado;
         private Label lblDeposito;
+        private Label lblObservaciones;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
@@ -76,6 +80,12 @@ namespace SistemaGestionResidencial.Vistas
             lblDeposito = new Label();
             Panel panelFormulario = new Panel();
             Label lblFormulario = new Label();
+            Panel panelBusqueda = new Panel();
+            Label lblBusqueda = new Label();
+            txtBusqueda = new TextBox();
+            Button btnBuscarPanel = new Button();
+            TextBox txtObservaciones = new TextBox();
+            Label lblObservaciones = new Label();
             dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
@@ -86,22 +96,64 @@ namespace SistemaGestionResidencial.Vistas
             dataGridViewTextBoxColumn8 = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dgvContratos).BeginInit();
             SuspendLayout();
-            
+
+            // Form
+            this.BackColor = Color.FromArgb(248, 249, 250);
+            this.AutoScroll = true;
+
             // lblTitulo
             lblTitulo.Text = "📄 Gestión de Contratos";
-            lblTitulo.Font = new Font("Segoe UI", 18, FontStyle.Bold);
+            lblTitulo.Font = new Font("Segoe UI", 20, FontStyle.Bold);
             lblTitulo.ForeColor = Color.FromArgb(45, 52, 54);
             lblTitulo.Location = new Point(20, 20);
-            lblTitulo.Size = new Size(350, 35);
+            lblTitulo.Size = new Size(400, 40);
             lblTitulo.TabIndex = 0;
-            
+
+            // panelBusqueda
+            panelBusqueda.Location = new Point(20, 70);
+            panelBusqueda.Size = new Size(880, 50);
+            panelBusqueda.BackColor = Color.White;
+            panelBusqueda.BorderStyle = BorderStyle.FixedSingle;
+
+            // lblBusqueda
+            lblBusqueda.Text = "🔍 Buscar:";
+            lblBusqueda.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            lblBusqueda.ForeColor = Color.FromArgb(45, 52, 54);
+            lblBusqueda.Location = new Point(15, 15);
+            lblBusqueda.Size = new Size(70, 25);
+            panelBusqueda.Controls.Add(lblBusqueda);
+
+            // txtBusqueda
+            txtBusqueda.Location = new Point(90, 12);
+            txtBusqueda.Name = "txtBusqueda";
+            txtBusqueda.Size = new Size(400, 25);
+            txtBusqueda.Font = new Font("Segoe UI", 9);
+            txtBusqueda.BorderStyle = BorderStyle.FixedSingle;
+            txtBusqueda.BackColor = Color.White;
+            txtBusqueda.PlaceholderText = "Buscar por inquilino, apartamento...";
+            panelBusqueda.Controls.Add(txtBusqueda);
+
+            // btnBuscarPanel
+            btnBuscarPanel.Text = "🔎 Buscar";
+            btnBuscarPanel.Location = new Point(500, 10);
+            btnBuscarPanel.Name = "btnBuscarPanel";
+            btnBuscarPanel.Size = new Size(100, 30);
+            btnBuscarPanel.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+            btnBuscarPanel.BackColor = Color.FromArgb(52, 152, 219);
+            btnBuscarPanel.ForeColor = Color.White;
+            btnBuscarPanel.FlatStyle = FlatStyle.Flat;
+            btnBuscarPanel.FlatAppearance.BorderSize = 0;
+            btnBuscarPanel.Cursor = Cursors.Hand;
+            btnBuscarPanel.Click += BtnBuscar_Click;
+            panelBusqueda.Controls.Add(btnBuscarPanel);
+
             // dgvContratos
-            dgvContratos.ColumnHeadersHeight = 35;
+            dgvContratos.ColumnHeadersHeight = 40;
             dgvContratos.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, dataGridViewTextBoxColumn2, dataGridViewTextBoxColumn3, dataGridViewTextBoxColumn4, dataGridViewTextBoxColumn5, dataGridViewTextBoxColumn6, dataGridViewTextBoxColumn7, dataGridViewTextBoxColumn8 });
-            dgvContratos.Location = new Point(20, 70);
+            dgvContratos.Location = new Point(20, 130);
             dgvContratos.Name = "dgvContratos";
             dgvContratos.RowHeadersWidth = 40;
-            dgvContratos.Size = new Size(880, 280);
+            dgvContratos.Size = new Size(880, 300);
             dgvContratos.TabIndex = 1;
             dgvContratos.BackgroundColor = Color.White;
             dgvContratos.GridColor = Color.FromArgb(236, 240, 241);
@@ -113,13 +165,14 @@ namespace SistemaGestionResidencial.Vistas
             dgvContratos.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             dgvContratos.EnableHeadersVisualStyles = false;
             dgvContratos.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(244, 246, 247);
-            
+            dgvContratos.RowTemplate.Height = 30;
+
             // panelFormulario
-            panelFormulario.Location = new Point(20, 370);
-            panelFormulario.Size = new Size(880, 220);
-            panelFormulario.BackColor = Color.FromArgb(248, 249, 250);
+            panelFormulario.Location = new Point(20, 450);
+            panelFormulario.Size = new Size(880, 280);
+            panelFormulario.BackColor = Color.White;
             panelFormulario.BorderStyle = BorderStyle.FixedSingle;
-            
+
             // lblFormulario
             lblFormulario.Text = "📝 Nuevo Contrato";
             lblFormulario.Font = new Font("Segoe UI", 12, FontStyle.Bold);
@@ -127,7 +180,7 @@ namespace SistemaGestionResidencial.Vistas
             lblFormulario.Location = new Point(15, 10);
             lblFormulario.Size = new Size(180, 25);
             panelFormulario.Controls.Add(lblFormulario);
-            
+
             // lblApartamento
             lblApartamento.Text = "Apartamento:";
             lblApartamento.Font = new Font("Segoe UI", 9);
@@ -135,7 +188,7 @@ namespace SistemaGestionResidencial.Vistas
             lblApartamento.Location = new Point(30, 50);
             lblApartamento.Size = new Size(80, 20);
             panelFormulario.Controls.Add(lblApartamento);
-            
+
             // cmbApartamento
             cmbApartamento.Items.AddRange(new object[] { "A-101", "A-102", "B-201", "B-202" });
             cmbApartamento.Location = new Point(30, 75);
@@ -146,7 +199,7 @@ namespace SistemaGestionResidencial.Vistas
             cmbApartamento.BackColor = Color.White;
             cmbApartamento.SelectedIndex = 0;
             panelFormulario.Controls.Add(cmbApartamento);
-            
+
             // lblInquilino
             lblInquilino.Text = "Inquilino:";
             lblInquilino.Font = new Font("Segoe UI", 9);
@@ -154,7 +207,7 @@ namespace SistemaGestionResidencial.Vistas
             lblInquilino.Location = new Point(200, 50);
             lblInquilino.Size = new Size(70, 20);
             panelFormulario.Controls.Add(lblInquilino);
-            
+
             // cmbInquilino
             cmbInquilino.Items.AddRange(new object[] { "Juan Pérez", "María García", "Carlos López" });
             cmbInquilino.Location = new Point(200, 75);
@@ -165,7 +218,7 @@ namespace SistemaGestionResidencial.Vistas
             cmbInquilino.BackColor = Color.White;
             cmbInquilino.SelectedIndex = 0;
             panelFormulario.Controls.Add(cmbInquilino);
-            
+
             // lblFechaInicio
             lblFechaInicio.Text = "Fecha Inicio:";
             lblFechaInicio.Font = new Font("Segoe UI", 9);
@@ -173,7 +226,7 @@ namespace SistemaGestionResidencial.Vistas
             lblFechaInicio.Location = new Point(370, 50);
             lblFechaInicio.Size = new Size(80, 20);
             panelFormulario.Controls.Add(lblFechaInicio);
-            
+
             // dtpFechaInicio
             dtpFechaInicio.Location = new Point(370, 75);
             dtpFechaInicio.Name = "dtpFechaInicio";
@@ -182,7 +235,7 @@ namespace SistemaGestionResidencial.Vistas
             dtpFechaInicio.Format = DateTimePickerFormat.Short;
             dtpFechaInicio.BackColor = Color.White;
             panelFormulario.Controls.Add(dtpFechaInicio);
-            
+
             // lblFechaFin
             lblFechaFin.Text = "Fecha Fin:";
             lblFechaFin.Font = new Font("Segoe UI", 9);
@@ -190,7 +243,7 @@ namespace SistemaGestionResidencial.Vistas
             lblFechaFin.Location = new Point(510, 50);
             lblFechaFin.Size = new Size(70, 20);
             panelFormulario.Controls.Add(lblFechaFin);
-            
+
             // dtpFechaFin
             dtpFechaFin.Location = new Point(510, 75);
             dtpFechaFin.Name = "dtpFechaFin";
@@ -199,7 +252,7 @@ namespace SistemaGestionResidencial.Vistas
             dtpFechaFin.Format = DateTimePickerFormat.Short;
             dtpFechaFin.BackColor = Color.White;
             panelFormulario.Controls.Add(dtpFechaFin);
-            
+
             // lblMontoMensual
             lblMontoMensual.Text = "Monto Mensual:";
             lblMontoMensual.Font = new Font("Segoe UI", 9);
@@ -207,7 +260,7 @@ namespace SistemaGestionResidencial.Vistas
             lblMontoMensual.Location = new Point(30, 110);
             lblMontoMensual.Size = new Size(90, 20);
             panelFormulario.Controls.Add(lblMontoMensual);
-            
+
             // txtMontoMensual
             txtMontoMensual.Location = new Point(30, 135);
             txtMontoMensual.Name = "txtMontoMensual";
@@ -216,7 +269,7 @@ namespace SistemaGestionResidencial.Vistas
             txtMontoMensual.BorderStyle = BorderStyle.FixedSingle;
             txtMontoMensual.BackColor = Color.White;
             panelFormulario.Controls.Add(txtMontoMensual);
-            
+
             // lblDeposito
             lblDeposito.Text = "Depósito:";
             lblDeposito.Font = new Font("Segoe UI", 9);
@@ -224,7 +277,7 @@ namespace SistemaGestionResidencial.Vistas
             lblDeposito.Location = new Point(150, 110);
             lblDeposito.Size = new Size(60, 20);
             panelFormulario.Controls.Add(lblDeposito);
-            
+
             // txtDeposito
             txtDeposito.Location = new Point(150, 135);
             txtDeposito.Name = "txtDeposito";
@@ -233,7 +286,7 @@ namespace SistemaGestionResidencial.Vistas
             txtDeposito.BorderStyle = BorderStyle.FixedSingle;
             txtDeposito.BackColor = Color.White;
             panelFormulario.Controls.Add(txtDeposito);
-            
+
             // lblEstado
             lblEstado.Text = "Estado:";
             lblEstado.Font = new Font("Segoe UI", 9);
@@ -241,7 +294,7 @@ namespace SistemaGestionResidencial.Vistas
             lblEstado.Location = new Point(270, 110);
             lblEstado.Size = new Size(50, 20);
             panelFormulario.Controls.Add(lblEstado);
-            
+
             // cmbEstado
             cmbEstado.Items.AddRange(new object[] { "Activo", "Vencido", "Cancelado", "Pendiente" });
             cmbEstado.Location = new Point(270, 135);
@@ -252,10 +305,27 @@ namespace SistemaGestionResidencial.Vistas
             cmbEstado.BackColor = Color.White;
             cmbEstado.SelectedIndex = 0;
             panelFormulario.Controls.Add(cmbEstado);
-            
+
+            // lblObservaciones
+            lblObservaciones.Text = "Observaciones:";
+            lblObservaciones.Font = new Font("Segoe UI", 9);
+            lblObservaciones.ForeColor = Color.FromArgb(127, 140, 141);
+            lblObservaciones.Location = new Point(30, 170);
+            lblObservaciones.Size = new Size(90, 20);
+            panelFormulario.Controls.Add(lblObservaciones);
+
+            // txtObservaciones
+            txtObservaciones.Location = new Point(30, 195);
+            txtObservaciones.Name = "txtObservaciones";
+            txtObservaciones.Size = new Size(600, 25);
+            txtObservaciones.Font = new Font("Segoe UI", 9);
+            txtObservaciones.BorderStyle = BorderStyle.FixedSingle;
+            txtObservaciones.BackColor = Color.White;
+            panelFormulario.Controls.Add(txtObservaciones);
+
             // btnAgregar
             btnAgregar.Text = "➕ Agregar";
-            btnAgregar.Location = new Point(30, 175);
+            btnAgregar.Location = new Point(30, 235);
             btnAgregar.Name = "btnAgregar";
             btnAgregar.Size = new Size(100, 35);
             btnAgregar.Font = new Font("Segoe UI", 9, FontStyle.Bold);
@@ -267,10 +337,10 @@ namespace SistemaGestionResidencial.Vistas
             btnAgregar.TabIndex = 12;
             btnAgregar.Click += BtnAgregar_Click;
             panelFormulario.Controls.Add(btnAgregar);
-            
+
             // btnEditar
             btnEditar.Text = "✏️ Editar";
-            btnEditar.Location = new Point(150, 175);
+            btnEditar.Location = new Point(150, 235);
             btnEditar.Name = "btnEditar";
             btnEditar.Size = new Size(100, 35);
             btnEditar.Font = new Font("Segoe UI", 9, FontStyle.Bold);
@@ -282,10 +352,10 @@ namespace SistemaGestionResidencial.Vistas
             btnEditar.TabIndex = 13;
             btnEditar.Click += BtnEditar_Click;
             panelFormulario.Controls.Add(btnEditar);
-            
+
             // btnEliminar
             btnEliminar.Text = "🗑️ Eliminar";
-            btnEliminar.Location = new Point(270, 175);
+            btnEliminar.Location = new Point(270, 235);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(100, 35);
             btnEliminar.Font = new Font("Segoe UI", 9, FontStyle.Bold);
@@ -297,10 +367,10 @@ namespace SistemaGestionResidencial.Vistas
             btnEliminar.TabIndex = 14;
             btnEliminar.Click += BtnEliminar_Click;
             panelFormulario.Controls.Add(btnEliminar);
-            
+
             // btnLimpiar
             btnLimpiar.Text = "🧹 Limpiar";
-            btnLimpiar.Location = new Point(390, 175);
+            btnLimpiar.Location = new Point(390, 235);
             btnLimpiar.Name = "btnLimpiar";
             btnLimpiar.Size = new Size(100, 35);
             btnLimpiar.Font = new Font("Segoe UI", 9, FontStyle.Bold);
@@ -312,67 +382,68 @@ namespace SistemaGestionResidencial.Vistas
             btnLimpiar.TabIndex = 15;
             btnLimpiar.Click += BtnLimpiar_Click;
             panelFormulario.Controls.Add(btnLimpiar);
-            
+
             // DataGridView Columns
             dataGridViewTextBoxColumn1.HeaderText = "ID";
             dataGridViewTextBoxColumn1.MinimumWidth = 50;
             dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             dataGridViewTextBoxColumn1.Width = 60;
             dataGridViewTextBoxColumn1.DefaultCellStyle.Font = new Font("Segoe UI", 9);
-            
+
             dataGridViewTextBoxColumn2.HeaderText = "Apartamento";
             dataGridViewTextBoxColumn2.MinimumWidth = 80;
             dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             dataGridViewTextBoxColumn2.Width = 100;
             dataGridViewTextBoxColumn2.DefaultCellStyle.Font = new Font("Segoe UI", 9);
-            
+
             dataGridViewTextBoxColumn3.HeaderText = "Inquilino";
             dataGridViewTextBoxColumn3.MinimumWidth = 100;
             dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             dataGridViewTextBoxColumn3.Width = 120;
             dataGridViewTextBoxColumn3.DefaultCellStyle.Font = new Font("Segoe UI", 9);
-            
+
             dataGridViewTextBoxColumn4.HeaderText = "Fecha Inicio";
             dataGridViewTextBoxColumn4.MinimumWidth = 90;
             dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             dataGridViewTextBoxColumn4.Width = 100;
             dataGridViewTextBoxColumn4.DefaultCellStyle.Font = new Font("Segoe UI", 9);
-            
+
             dataGridViewTextBoxColumn5.HeaderText = "Fecha Fin";
             dataGridViewTextBoxColumn5.MinimumWidth = 80;
             dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             dataGridViewTextBoxColumn5.Width = 100;
             dataGridViewTextBoxColumn5.DefaultCellStyle.Font = new Font("Segoe UI", 9);
-            
+
             dataGridViewTextBoxColumn6.HeaderText = "Monto Mensual";
             dataGridViewTextBoxColumn6.MinimumWidth = 100;
             dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
             dataGridViewTextBoxColumn6.Width = 110;
             dataGridViewTextBoxColumn6.DefaultCellStyle.Font = new Font("Segoe UI", 9);
             dataGridViewTextBoxColumn6.DefaultCellStyle.Format = "C2";
-            
+
             dataGridViewTextBoxColumn7.HeaderText = "Depósito";
             dataGridViewTextBoxColumn7.MinimumWidth = 80;
             dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
             dataGridViewTextBoxColumn7.Width = 90;
             dataGridViewTextBoxColumn7.DefaultCellStyle.Font = new Font("Segoe UI", 9);
             dataGridViewTextBoxColumn7.DefaultCellStyle.Format = "C2";
-            
+
             dataGridViewTextBoxColumn8.HeaderText = "Estado";
             dataGridViewTextBoxColumn8.MinimumWidth = 80;
             dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
             dataGridViewTextBoxColumn8.Width = 100;
             dataGridViewTextBoxColumn8.DefaultCellStyle.Font = new Font("Segoe UI", 9);
-            
+
             // ContratoForm
-            ClientSize = new Size(920, 610);
+            ClientSize = new Size(920, 750);
             Controls.Add(panelFormulario);
+            Controls.Add(panelBusqueda);
             Controls.Add(lblTitulo);
             Controls.Add(dgvContratos);
             Name = "ContratoForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Gestión de Contratos";
-            BackColor = Color.FromArgb(236, 240, 241);
+            BackColor = Color.FromArgb(248, 249, 250);
             Font = new Font("Segoe UI", 9);
             ((System.ComponentModel.ISupportInitialize)dgvContratos).EndInit();
             ResumeLayout(false);
@@ -397,6 +468,11 @@ namespace SistemaGestionResidencial.Vistas
         private void BtnLimpiar_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
+        }
+
+        private void BtnBuscar_Click(object sender, EventArgs e)
+        {
+            BuscarContratos();
         }
 
         private void CargarCombos()
@@ -425,7 +501,7 @@ namespace SistemaGestionResidencial.Vistas
             {
                 dgvContratos.Rows.Clear();
                 var contratos = _contratoRepository.ObtenerTodos();
-                
+
                 foreach (var contrato in contratos)
                 {
                     dgvContratos.Rows.Add(
@@ -443,6 +519,44 @@ namespace SistemaGestionResidencial.Vistas
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar contratos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BuscarContratos()
+        {
+            try
+            {
+                string busqueda = txtBusqueda.Text.ToLower();
+                if (string.IsNullOrWhiteSpace(busqueda))
+                {
+                    CargarContratos();
+                    return;
+                }
+
+                dgvContratos.Rows.Clear();
+                var contratos = _contratoRepository.ObtenerTodos()
+                    .Where(c => (c.Apartamento?.Numero ?? "").ToLower().Contains(busqueda) ||
+                               (c.Inquilino?.Nombre ?? "").ToLower().Contains(busqueda) ||
+                               (c.Inquilino?.Apellido ?? "").ToLower().Contains(busqueda) ||
+                               c.Estado.ToString().ToLower().Contains(busqueda));
+
+                foreach (var contrato in contratos)
+                {
+                    dgvContratos.Rows.Add(
+                        contrato.Id,
+                        contrato.Apartamento?.Numero ?? "N/A",
+                        contrato.Inquilino?.Nombre + " " + contrato.Inquilino?.Apellido ?? "N/A",
+                        contrato.FechaInicio.ToShortDateString(),
+                        contrato.FechaFin.ToShortDateString(),
+                        contrato.MontoMensual.ToString("C2"),
+                        contrato.Deposito.ToString("C2"),
+                        contrato.Estado.ToString()
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al buscar contratos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -491,7 +605,7 @@ namespace SistemaGestionResidencial.Vistas
 
                 int id = Convert.ToInt32(dgvContratos.SelectedRows[0].Cells[0].Value);
                 var contrato = _contratoRepository.ObtenerPorId(id);
-                
+
                 if (contrato == null)
                 {
                     MessageBox.Show("Contrato no encontrado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -528,9 +642,9 @@ namespace SistemaGestionResidencial.Vistas
                 }
 
                 int id = Convert.ToInt32(dgvContratos.SelectedRows[0].Cells[0].Value);
-                
+
                 var result = MessageBox.Show("¿Está seguro de eliminar este contrato?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                
+
                 if (result == DialogResult.Yes)
                 {
                     _contratoRepository.Eliminar(id);
